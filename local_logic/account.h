@@ -3,6 +3,7 @@
 #include<time.h>
 #include<set>
 #include "people.h"
+#include "table.h"
 
 /*********账户类**********/
 
@@ -54,15 +55,16 @@ namespace ACCOUNT {
 		double moneyUsed = 0.0;                       //花掉的钱
 
 	public:
-		using Account::Account;
 		CustomerAccount& removeComment(unsigned id);   //删除评论
 		virtual Permission permission()const override{return customer;}
-		void startOrder();
+		void startOrder(TABLE::TableId _tableId);                     //选桌开始
 		void addTask();                                               //增加订单
 		void urgeTask(unsigned taskId);                               //催单
 		void writeComment();
 		void finishOrder();
 		void SendMessage(const string& m);                            //给服务员发送信息
+		bool isVIP() const;
+		void setVIP(bool);
 	};
 
 	class AdministratorAccount:public Account
@@ -104,15 +106,15 @@ namespace ACCOUNT {
 		virtual Permission permission() const override { return waiter; }
 		void getTable(unsigned id);
 		double star();                        //返回评级
-		unsigned finishedOrderCount();        //返回完成的订单
+		unsigned finishedOrderCount();        //返回完成的订单数量
 		void reserveMassage(const string& m); //接收顾客发出的信息
+		void setTable(TABLE::TableId _tableId);//同时改变Table类中的服务员对象
 											  //现在缺少构造函数！
 	private:
 		void FinishTable();                 //被CustomerAccount::finishOrder()调用，不能单独调用
-		unsigned currentTable;
-		set<unsigned> tableIdSet;
+		TABLE::TableId currentTable;
 		set<unsigned> OrderIdFinished;
-		set<unsigned> commentIdSet;
+		COMMENT::CommentList commentIdList;
 	};
 
 	class ManagerAccount :public Account

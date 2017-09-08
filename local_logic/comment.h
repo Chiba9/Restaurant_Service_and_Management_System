@@ -36,10 +36,9 @@ namespace COMMENT {
 	private:
 		time_t timeCreated;
 		double star;
-		time_t timeWroten;
 		string text;
 		ACCOUNT::AccountID customerId;
-		CommentListId commentListId;
+		CommentListId commentListId = -1;      //-1代表不属于任何评论列表
 	};
 
 	class CommentList :public AbstractID::ID<CommentList>

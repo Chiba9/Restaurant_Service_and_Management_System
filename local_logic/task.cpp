@@ -19,6 +19,11 @@ void TASK::Task::setStatus(taskStatus _status)
 	status = _status;
 }
 
+void TASK::Task::setOrder(ORDER::OrderId _orderId)
+{
+	orderId = _orderId;
+}
+
 void TASK::Task::setChef(unsigned _chefId)
 {
 	chefId = _chefId;

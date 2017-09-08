@@ -27,6 +27,8 @@ namespace TASK {
 		double price() const;                //返回菜价
 		bool Urged() const;                  //返回催单情况，不能修改
 		void setStatus(taskStatus _status);  //设定任务情况
+		//设定订单、只完成自身的操作、被订单的添加任务函数调用
+		void setOrder(ORDER::OrderId _orderId);
 		//设定厨师、只完成自身的操作、被厨师的接受任务函数调用
 		void setChef(unsigned _chefId);      
 		DISH::DishId getDishId() const;
