@@ -39,6 +39,18 @@
     <ClInclude Include="GeneralData.h">
       <Filter>头文件</Filter>
     </ClInclude>
+    <ClInclude Include="order.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="restaurant.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="discount.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="table.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="account.cpp">
@@ -60,6 +72,18 @@
       <Filter>源文件</Filter>
     </ClCompile>
     <ClCompile Include="menu.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="table.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="restaurant.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="order.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="discount.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
   </ItemGroup>

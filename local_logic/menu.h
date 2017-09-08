@@ -33,5 +33,4 @@ namespace MENU {
 		const DISH::DishIdList& getDishesId()const;
 	};
 	std::ostream& operator<<(std::ostream& os, const Menu& m);
-
 }

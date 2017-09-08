@@ -13,4 +13,5 @@ map<MENU::MenuId, MENU::Menu*>MenuMap;
 map<COMMENT::CommentId, COMMENT::Comment*>CommentMap;
 map<ACCOUNT::AccountID, ACCOUNT::Account*>AccountMap;
 map<TASK::TaskId, TASK::task*>TaskMap;
+map<TASK::TaskId, TASK::task*>CurrrentTaskMap;
 map<COMMENT::CommentListId, COMMENT::CommentList*>CommentListMap;

@@ -149,20 +149,28 @@
   <ItemGroup>
     <ClInclude Include="account.h" />
     <ClInclude Include="comment.h" />
+    <ClInclude Include="discount.h" />
     <ClInclude Include="dish.h" />
     <ClInclude Include="id.h" />
     <ClInclude Include="menu.h" />
+    <ClInclude Include="order.h" />
     <ClInclude Include="people.h" />
+    <ClInclude Include="restaurant.h" />
+    <ClInclude Include="table.h" />
     <ClInclude Include="task.h" />
     <ClInclude Include="GeneralData.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="account.cpp" />
     <ClCompile Include="comment.cpp" />
+    <ClCompile Include="discount.cpp" />
     <ClCompile Include="dish.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="menu.cpp" />
+    <ClCompile Include="order.cpp" />
     <ClCompile Include="people.cpp" />
+    <ClCompile Include="restaurant.cpp" />
+    <ClCompile Include="table.cpp" />
     <ClCompile Include="task.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
