@@ -4,7 +4,7 @@
 
 
 namespace TASK {
-	
+	using TaskId = unsigned;
 	enum taskStatus {
 		choosing/*刚刚被用户创立、选择中*/, waiting/*在任务列表中等待提交*/, cooking/*厨师烹饪中*/
 		, serving/*上菜中*/, eating/*顾客正在吃*/,quitted/*用户已放弃该菜*/, finished/*已完成*/

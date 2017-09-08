@@ -3,12 +3,12 @@
 #include "dish.h"
 #include<string>
 #include<set>
-
-
-void swap(Menu &lhs, Menu &rhs)
+#include "GeneralData.h"
+using namespace MENU;
+void MENU::swap(Menu &lhs, Menu &rhs)
 {
 	std::swap(lhs.id(), rhs.id());
-	std::swap(lhs.dishIdSet, rhs.dishIdSet);
+	std::swap(lhs.dishIdList, rhs.dishIdList);
 }
 
 Menu::~Menu()
@@ -18,57 +18,39 @@ Menu::~Menu()
 
 Menu::Menu(const Menu &m) :ID(m)
 {
-	for (unsigned d : m.dishIdSet)
-		dishIdSet.insert(d);
+	for (unsigned d : m.dishIdList.getDishVec())
+		dishIdList.addDish(d);
 }
 
 
 Menu::Menu(Menu&& m) :ID(m)
 {
-	for (unsigned d : m.dishIdSet) {
-		dishIdSet.insert(d);
+	for (unsigned d : m.dishIdList.getDishVec()) {
+		dishIdList.addDish(d);
 	}
 }
 
 Menu& Menu::addDishId(const unsigned &d)
 {
-	dishIdSet.insert(d);
+	dishIdList.addDish(d);
 	return *this;
 }
 
-unsigned Menu::count() const
+unsigned Menu::size() const
 {
-	return dishIdSet.size();
+	return dishIdList.size();
 }
 
-void Menu::sortByName()
+const const DISH::DishIdList& Menu::getDishesId() const
 {
-	n_sort([](const unsigned lhs, const unsigned rhs)->bool {return DishSet[lhs].getName() < DishSet[rhs].getName(); });
+	return dishIdList;
 }
 
-void Menu::sortByPrice()
+std::ostream&MENU::operator<<(std::ostream& os, const Menu& m)
 {
-	n_sort([](const unsigned lhs, const unsigned rhs)->bool {return DishSet[lhs].getPrice() < DishSet[rhs].getPrice(); });
-}
-
-void Menu::sortByStar()
-{
-	n_sort([](const unsigned lhs, const unsigned rhs)->bool {return DishSet[lhs].star() < DishSet[rhs].star(); });
-}
-
-void Menu::sortByHeat()
-{
-	dishList.n_sort([](const unsigned lhs, const unsigned rhs)->bool {return DishSet[lhs].CommentNumber() < DishSet[rhs].CommentNumber(); });
-}
-
-const std::set<unsigned> &Menu::getDishesId() const
-{
-	return dishIdSet;
-}
-
-
-template<typename F>
-void Menu::n_sort(F f, bool reserve)
-{
-	std::sort(dishIdSet.begin(), dishIdSet.end(), f);
+	for (auto i : m.getDishesId().getDishVec())
+	{
+		os << m.getDishesId[i];
+	}
+	return os;
 }

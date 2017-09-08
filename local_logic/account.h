@@ -2,6 +2,7 @@
 #define ACCOUNT_H
 #include<time.h>
 #include<set>
+#include "people.h"
 
 /*********账户类**********/
 
@@ -11,6 +12,7 @@ namespace ACCOUNT {
 	class Order;  //订单类（尚未实现）
 	class Task;   //任务类（尚未实现）
 	using std::string; using std::set;
+	using AccountID = unsigned;
 	//代表权限的枚举类型
 	enum Permission{customer,administrator,chef,waiter,manager};
 	//其他账户类的虚基类
