@@ -23,16 +23,23 @@ namespace ORDER
 	class Order:public AbstractID::ID<Order>
 	{
 	private:
-		std::set<TASK::TaskId> taskIdSet;    /*购物车(菜篮）*/
-		COMMENT::CommentId commentId;        /*订单评价*/
 		ACCOUNT::AccountID customerId;       /*顾客ID*/
 		ACCOUNT::AccountID waiterId;		 /*服务员ID*/
 		TABLE::TableId tableId;				 /*对应桌号*/
 		OrderStatus status;                  /*订单状态*/
 		time_t timeCreated;				     /*创建时间*/
+		std::set<TASK::TaskId> taskIdSet;    /*购物车(菜篮）*/
+		COMMENT::CommentId commentId;        /*订单评价*/
 	public:
-		double price();
-		double price(const DISCOUNT::Discount *discount);
+		Order() = default;
+		//全构造函数
+		Order(ACCOUNT::AccountID _customerId, ACCOUNT::AccountID _waiterId,
+			TABLE::TableId _tableId, OrderStatus _status, const time_t& _timeCreated,
+			std::set<TASK::TaskId> _taskIdSet, COMMENT::CommentId _commentId);
+		//该构造函数在顾客创建订单时调用，提供有限的参数
+		Order(ACCOUNT::AccountID _customerId, TABLE::TableId _tableId);
+		double price() const;
+		double price(const DISCOUNT::Discount *discount) const;
 		//下面两个函数将进行task对象的设定
 		void addTask(TASK::TaskId _taskId);
 		void removeTask(TASK::TaskId _taskId);
@@ -40,6 +47,10 @@ namespace ORDER
 		void setStatus(OrderStatus _status);
 		COMMENT::CommentId getCommentId() const;
 		double star() const;
+		TABLE::TableId getTableId()const;
+		const std::set<TASK::TaskId> getTaskIdSet()const;
+		ACCOUNT::AccountID getWaiterId() const;
+		void setWaiterId(ACCOUNT::AccountID val);
 	};
 }
 

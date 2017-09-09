@@ -1,15 +1,33 @@
 #include "task.h"
 #include "id.h"
-#include "GeneralData.h"
+
 #include "dish.h"
 #include "account.h"
 #include "order.h"
+
+TASK::Task::Task(DISH::DishId _dishId, ORDER::OrderId _orderId, taskStatus _status,
+	ACCOUNT::AccountID _chefId, time_t _timeCreated, bool _urgement):
+	dishId(_dishId),orderId(_orderId),status(_status),
+	chefId(_chefId),timeCreated(_timeCreated),urgement(_urgement){}
+
+TASK::Task::Task(DISH::DishId _dishId, ORDER::OrderId _orderId):
+	dishId(_dishId),orderId(_orderId),status(TASK::choosing),
+	chefId(-1),urgement(false)
+{
+	time(&timeCreated);
+}
+
 double TASK::Task::price() const
 {
 	return DishMap.at(dishId)->getPrice();
 }
 
-bool TASK::Task::Urged() const
+void TASK::Task::urge()
+{
+	urgement = true;
+}
+
+bool TASK::Task::getUrgement() const
 {
 	return urgement;
 }

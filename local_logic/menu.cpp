@@ -3,7 +3,7 @@
 #include "dish.h"
 #include<string>
 #include<set>
-#include "GeneralData.h"
+
 using namespace MENU;
 void MENU::swap(Menu &lhs, Menu &rhs)
 {

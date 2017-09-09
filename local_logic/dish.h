@@ -21,8 +21,8 @@ namespace DISH {
 	{
 		friend void swap(Dish&, Dish&);
 	public:
-		Dish(const std::string& n, double p, const std::string& pic = "", Spicy s = Normal) :
-			ID(),name(n), price(p), picture(pic), spice(s), CommentIdSet(std::set<unsigned>()) {}
+		Dish(const std::string& n, double p, const std::string& pic = "", Spicy s = Normal, COMMENT::CommentListId c = -1) :
+			ID(),name(n), price(p), picture(pic), spice(s), commentList(c) {}
 		Dish(const Dish&);
 		Dish(Dish&&);
 		Dish& operator=(Dish);
@@ -44,7 +44,7 @@ namespace DISH {
 	private:
 		std::string picture;                //菜图
 		std::string name;                   //菜名
-		COMMENT::CommentListId commentListId;    //评价列表（类值行为）
+		COMMENT::CommentListId commentList;    //评价列表（类值行为）
 		std::string description;
 		double price;                   //价格
 		Spicy spice;                    //辣度（枚举类型）

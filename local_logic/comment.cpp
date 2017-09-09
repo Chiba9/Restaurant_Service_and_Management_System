@@ -4,7 +4,7 @@
 #include<time.h>
 #include<algorithm>
 #include"id.h"
-#include "GeneralData.h"
+
 using namespace COMMENT;
 
 const std::string& COMMENT::Comment::getText() const
@@ -42,11 +42,12 @@ time_t COMMENT::Comment::getTime() const
 void COMMENT::Comment::reTarget(CommentListId cli)
 {
 	commentListId = cli;
+	RESTAURANT::Restaurant::CommentListMap.at(cli)->addComment(id());
 }
 
 void COMMENT::Comment::remove()
 {
-	CommentListMap.at(commentListId)->removeComment(id());
+	RESTAURANT::Restaurant::CommentListMap.at(commentListId)->removeComment(id());
 	commentListId = -1;
 }
 

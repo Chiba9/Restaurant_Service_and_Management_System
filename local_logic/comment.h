@@ -18,7 +18,7 @@ namespace COMMENT {
 	{
 	public:
 		Comment() = default;
-		Comment(ACCOUNT::AccountID _customerId,const double _star,const string& _text, CommentListId _commentListId):
+		Comment(ACCOUNT::AccountID _customerId,const int _star,const string& _text = "", CommentListId _commentListId = -1):
 			ID(),customerId(_customerId),text(_text),commentListId(_commentListId)
 		{
 			if (_star < 0 || star>5)throw std::runtime_error("评分不对！");
@@ -35,7 +35,7 @@ namespace COMMENT {
 		void remove();                          //同时从commentList中移除
 	private:
 		time_t timeCreated;
-		double star;
+		int star;
 		string text;
 		ACCOUNT::AccountID customerId;
 		CommentListId commentListId = -1;      //-1代表不属于任何评论列表

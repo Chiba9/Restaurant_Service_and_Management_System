@@ -1,10 +1,25 @@
 #include "order.h"
-#include "GeneralData.h"
-double ORDER::Order::price()
+
+
+ORDER::Order::Order(ACCOUNT::AccountID _customerId, ACCOUNT::AccountID _waiterId, 
+		TABLE::TableId _tableId, OrderStatus _status, const time_t& _timeCreated, 
+		std::set<TASK::TaskId> _taskIdSet, COMMENT::CommentId _commentId):
+	customerId(_customerId), waiterId(_waiterId), tableId(_tableId),
+	status(_status), timeCreated(_timeCreated), taskIdSet(_taskIdSet),
+	commentId(_commentId) {}
+
+ORDER::Order::Order(ACCOUNT::AccountID _customerId, TABLE::TableId _tableId) :
+	commentId(-1), customerId(_customerId), status(waitingForComming),
+	tableId(_tableId), waiterId(-1), taskIdSet()
+{
+	time(&timeCreated);
+}
+
+double ORDER::Order::price()const
 {
 	double ret = 0.0;
 	for (TASK::TaskId id : taskIdSet)
-		ret += TaskMap.at(id)->price();
+		ret += RESTAURANT::Restaurant::TaskMap.at(id)->price();
 	return ret;
 }
 
@@ -41,9 +56,30 @@ double ORDER::Order::star() const
 	return CommentMap.at(commentId)->getStar();
 }
 
-double ORDER::Order::price(const DISCOUNT::Discount *discount)
+TABLE::TableId ORDER::Order::getTableId() const
+{
+	return tableId;
+}
+
+const std::set<TASK::TaskId> ORDER::Order::getTaskIdSet() const
+{
+	return taskIdSet;
+}
+
+ACCOUNT::AccountID ORDER::Order::getWaiterId() const
+{
+	return waiterId;
+}
+
+void ORDER::Order::setWaiterId(ACCOUNT::AccountID val)
+{
+	waiterId = val;
+}
+
+double ORDER::Order::price(const DISCOUNT::Discount *discount)const
 {
 	return discount->netPrice(price(), 
-		dynamic_cast<ACCOUNT::CustomerAccount*>(AccountMap.at(customerId))->isVIP());
+		dynamic_cast<ACCOUNT::CustomerAccount*>
+		(RESTAURANT::Restaurant::AccountMap.at(customerId).get())->isVIP());
 }
 

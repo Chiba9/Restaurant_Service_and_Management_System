@@ -4,6 +4,7 @@
 #include<set>
 #include "people.h"
 #include "table.h"
+#include "restaurant.h"
 
 /*********账户类**********/
 
@@ -47,20 +48,23 @@ namespace ACCOUNT {
 	class CustomerAccount :public Account
 	{
 	private:
-		set<unsigned> CommentIdSet;
-		set<unsigned> prevoiseOrderIdSet;             //以前的订单
+		COMMENT::CommentList commentIdList;
+		set<ORDER::Order> previousOrderIdSet;             //以前的订单
 		unsigned currentOrderId;
 		static string defaultCustomerHeadPicture;
 		bool VIP = false;                             //是否是VIP
 		double moneyUsed = 0.0;                       //花掉的钱
-
+		bool checkOrder();                            //检查订单是否下达
+		bool checkTask(TASK::TaskId _taskId);         //检查任务是否在订单中
 	public:
-		CustomerAccount& removeComment(unsigned id);   //删除评论
+		CustomerAccount& removeComment(COMMENT::CommentId id);   //删除评论
 		virtual Permission permission()const override{return customer;}
 		void startOrder(TABLE::TableId _tableId);                     //选桌开始
-		void addTask();                                               //增加订单
-		void urgeTask(unsigned taskId);                               //催单
-		void writeComment();
+		void addTask(DISH::DishId _dishId);                           //增加任务
+		void urgeTask(TASK::TaskId _taskId);                               //催单
+		void writeWaiterComment(int star, string _text = "");
+		void writeDishComment(TASK::TaskId _taskId, int _star, string _text = "");
+		void writeOrderComment(int _star, string _text = "");
 		void finishOrder();
 		void SendMessage(const string& m);                            //给服务员发送信息
 		bool isVIP() const;
@@ -94,6 +98,7 @@ namespace ACCOUNT {
 		unsigned finishedTaskCount();       //返回完成的任务数
 		//现在缺少构造函数！
 	private:
+		static string defaultCustomerHeadPicture;
 		unsigned currentTask;
 		set<unsigned> taskIdSet;            
 		set<unsigned> taskIdFinished;
@@ -109,11 +114,14 @@ namespace ACCOUNT {
 		unsigned finishedOrderCount();        //返回完成的订单数量
 		void reserveMassage(const string& m); //接收顾客发出的信息
 		void setTable(TABLE::TableId _tableId);//同时改变Table类中的服务员对象
-											  //现在缺少构造函数！
+		void addComment(COMMENT::CommentId _commetId);
+		COMMENT::CommentList getCommentIdList() const;
+		//现在缺少构造函数！
 	private:
 		void FinishTable();                 //被CustomerAccount::finishOrder()调用，不能单独调用
 		TABLE::TableId currentTable;
 		set<unsigned> OrderIdFinished;
+		static string defaultCustomerHeadPicture;
 		COMMENT::CommentList commentIdList;
 	};
 
@@ -127,7 +135,7 @@ namespace ACCOUNT {
 	private:
 		set<unsigned> chefSet;
 		set<unsigned> waiterSet;
-		
+		static string defaultCustomerHeadPicture;
 	};
 }
 
