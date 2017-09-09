@@ -4,6 +4,7 @@
 #include "task.h"
 #include "account.h"
 #include "menu.h"
+#include "table.h"
 #include <map>
 #include<vector>
 #include <string>
@@ -15,3 +16,4 @@ map<ACCOUNT::AccountID, ACCOUNT::Account*>AccountMap;
 map<TASK::TaskId, TASK::Task*>TaskMap;
 map<TASK::TaskId, TASK::Task*>CurrrentTaskMap;
 map<COMMENT::CommentListId, COMMENT::CommentList*>CommentListMap;
+map<TABLE::TableId, TABLE::Table*> TableMap;
