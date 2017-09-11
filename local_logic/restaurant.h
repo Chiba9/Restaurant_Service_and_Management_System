@@ -1,4 +1,6 @@
-#pragma once
+#ifndef RESTAURANT_H
+#define RESTAURANT_H
+
 #include "dish.h"
 #include "comment.h"
 #include "task.h"
@@ -12,9 +14,9 @@
 #include <string>
 #include <memory>
 using std::map;
+const unsigned Nodata = -1;
 namespace RESTAURANT
 {
-
 	class Restaurant
 	{
 	public:
@@ -37,3 +39,5 @@ namespace RESTAURANT
 		static DISCOUNT::Discount *discount;
 	};
 }
+
+#endif // !RESTAURANT_H

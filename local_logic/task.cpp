@@ -12,7 +12,7 @@ TASK::Task::Task(DISH::DishId _dishId, ORDER::OrderId _orderId, taskStatus _stat
 
 TASK::Task::Task(DISH::DishId _dishId, ORDER::OrderId _orderId):
 	dishId(_dishId),orderId(_orderId),status(TASK::choosing),
-	chefId(-1),urgement(false)
+	chefId(Nodata),urgement(false)
 {
 	time(&timeCreated);
 }
@@ -82,14 +82,14 @@ double TASK::TaskList::star() const
 	double sum = 0.0;
 	unsigned count = 0;
 	for (TaskId _id : taskIdList)
-		if (RESTAURANT::Restaurant::TaskMap.at(_id)->getStar() != -1) {
+		if (RESTAURANT::Restaurant::TaskMap.at(_id)->getStar() != Nodata) {
 			sum += RESTAURANT::Restaurant::TaskMap.at(_id)->getStar();
 			++count;
 		}
 	if (count != 0)
 		return sum / count;
 	else
-		return -1;
+		return Nodata;
 }
 
 std::size_t TASK::TaskList::size() const

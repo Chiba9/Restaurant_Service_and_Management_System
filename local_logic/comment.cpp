@@ -7,6 +7,20 @@
 
 using namespace COMMENT;
 
+COMMENT::Comment::Comment(ACCOUNT::AccountID _customerId, const int _star,
+	const string& _text /*= ""*/, CommentListId _commentListId /*= Nodata*/) :
+	ID(), customerId(_customerId), text(_text), commentListId(_commentListId)
+{
+	if (_star < 0 || star>5)throw std::runtime_error("ÆÀ·Ö²»¶Ô£¡");
+	star = _star;
+	time(&timeCreated);
+}
+
+COMMENT::Comment::Comment(ACCOUNT::AccountID _customerId, const int _star,
+	const string& _text, CommentListId _commentListId, time_t _timeCreated):
+	customerId(_customerId),star(_star),text(_text),
+	commentListId(_commentListId),timeCreated(_timeCreated){}
+
 const std::string& COMMENT::Comment::getText() const
 {
 	return text;
@@ -46,7 +60,13 @@ void COMMENT::Comment::reTarget(CommentListId cli)
 void COMMENT::Comment::remove()
 {
 	RESTAURANT::Restaurant::CommentListMap.at(commentListId)->removeComment(id());
-	commentListId = -1;
+	commentListId = Nodata;
+}
+
+COMMENT::CommentList::CommentList(std::initializer_list<CommentId> il) :
+	CommentIdList(il)
+{
+
 }
 
 void COMMENT::CommentList::addComment(CommentId _commentId)

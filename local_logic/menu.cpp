@@ -8,6 +8,7 @@ using namespace MENU;
 void MENU::swap(Menu &lhs, Menu &rhs)
 {
 	std::swap(lhs.id(), rhs.id());
+	std::swap(lhs._type, rhs._type);
 	std::swap(lhs.dishIdList, rhs.dishIdList);
 }
 

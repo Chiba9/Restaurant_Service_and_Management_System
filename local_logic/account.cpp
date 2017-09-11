@@ -9,6 +9,36 @@ using std::shared_ptr;
 using std::make_shared;
 using RESTAURANT::Restaurant;
 
+ACCOUNT::string& ACCOUNT::Account::UserName()
+{
+	return userName;
+}
+
+const ACCOUNT::string& ACCOUNT::Account::UserName() const
+{
+	return userName;
+}
+
+ACCOUNT::string& ACCOUNT::Account::PassWord()
+{
+	return passWord;
+}
+
+const ACCOUNT::string& ACCOUNT::Account::PassWord() const
+{
+	return passWord;
+}
+
+ACCOUNT::string& ACCOUNT::Account::HeadPicture()
+{
+	return headPicture;
+}
+
+const ACCOUNT::string& ACCOUNT::Account::HeadPicture() const
+{
+	return headPicture;
+}
+
 void ACCOUNT::Account::changePassword(const string& prevPassWord, const string& newPassWord)
 {
 	if (prevPassWord == passWord)
@@ -17,9 +47,62 @@ void ACCOUNT::Account::changePassword(const string& prevPassWord, const string& 
 		throw std::runtime_error("密码错误！");
 }
 
+std::string ACCOUNT::Account::defaultCustomerHeadPicture = "defaultCustomerHeadPicture";
+
+ACCOUNT::string ACCOUNT::Account::defaultWaiterHeadPicture = "defaultWaiterHeadPicture";
+
+ACCOUNT::string ACCOUNT::Account::defaultChefHeadPicture = "defaultChefHeadPicture";
+
+ACCOUNT::string ACCOUNT::Account::defaultAdministratorHeadPicture = "defaultAdministratorHeadPicture";
+
+ACCOUNT::string ACCOUNT::Account::defaultManagerHeadPicture = "defaultManagerHeadPicture";
+
+ACCOUNT::Account::Account(string n, string p) :userName(n), passWord(p)
+{
+	time(&timeCreated);
+}
+
+void ACCOUNT::Account::setDefaultHeadPicture(Permission _permission)
+{
+	switch (_permission)
+	{
+	case ACCOUNT::customer:
+		headPicture = defaultCustomerHeadPicture;
+		break;
+	case ACCOUNT::administrator:
+		headPicture = defaultAdministratorHeadPicture;
+		break;
+	case ACCOUNT::chef:
+		headPicture = defaultChefHeadPicture;
+		break;
+	case ACCOUNT::waiter:
+		headPicture = defaultWaiterHeadPicture;
+		break;
+	case ACCOUNT::manager:
+		headPicture = defaultManagerHeadPicture;
+		break;
+	default:
+		break;
+	}
+}
+
+ACCOUNT::Account::Account(string n, string p, string pic) :
+	userName(n), passWord(p), headPicture(pic)
+{
+
+}
+
+ACCOUNT::Account::Account(string n, string p, time_t t, string pic) :
+	userName(n), passWord(p), timeCreated(t), headPicture(pic)
+{
+	time(&timeCreated);
+}
+
+double ACCOUNT::CustomerAccount::VIPmoney = 500;
+
 bool ACCOUNT::CustomerAccount::checkOrder()
 {
-	if (currentOrderId == -1)
+	if (currentOrderId == Nodata)
 		throw std::runtime_error("订单尚未下达！");
 	else return true;
 }
@@ -69,8 +152,8 @@ void ACCOUNT::CustomerAccount::quitTask(TASK::TaskId _taskId)
 			Restaurant::CurrentTaskMap.erase(_taskId);
 		}
 		_task->setStatus(TASK::quitted);
-		_task->setChef(-1);
-		_task->setOrder(-1);
+		_task->setChef(Nodata);
+		_task->setOrder(Nodata);
 	}
 	else throw std::runtime_error("菜已煮好不能放弃！");
 }
@@ -138,7 +221,7 @@ void ACCOUNT::CustomerAccount::finishCurrentOrder()
 		Restaurant::TaskMap.at(_taskId)->setStatus(TASK::finished);
 	auto _waiter = Restaurant::WaiterAccountMap.at(_waiterId);
 	_waiter->FinishTable();
-	_waiter->setTable(-1);
+	_waiter->setTable(Nodata);
 	_order->setStatus(ORDER::finished);
 	checkVIP();
 }
@@ -199,13 +282,13 @@ void ACCOUNT::ChefAccount::FinishTask()
 	if (!free()) {
 		previousTaskList.addTask(currentTask);
 		Restaurant::TaskMap.at(currentTask)->setStatus(TASK::serving);
-		currentTask = -1;
+		currentTask = Nodata;
 	}
 }
 
 bool ACCOUNT::ChefAccount::free()
 {
-	return currentTask == -1;
+	return currentTask == Nodata;
 }
 
 double ACCOUNT::ChefAccount::star()
@@ -230,7 +313,7 @@ TABLE::TableId ACCOUNT::WaiterAccount::getTable() const
 
 bool ACCOUNT::WaiterAccount::free()
 {
-	return currentTable == -1;
+	return currentTable == Nodata;
 }
 
 double ACCOUNT::WaiterAccount::star()
@@ -266,6 +349,6 @@ COMMENT::CommentList ACCOUNT::WaiterAccount::getCommentIdList() const
 void ACCOUNT::WaiterAccount::FinishTable()
 {
 	Restaurant::TableMap.at(currentTable)->reset();
-	currentTable = -1;
+	currentTable = Nodata;
 }
 

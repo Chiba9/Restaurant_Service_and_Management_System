@@ -6,6 +6,7 @@
 #include<string>
 #include<stdexcept>
 #include "account.h"
+#include<initializer_list>
 /************************************************************************/
 /* 评论类Comment,评论列表CommentList                                     */
 /************************************************************************/
@@ -18,13 +19,10 @@ namespace COMMENT {
 	{
 	public:
 		Comment() = default;
-		Comment(ACCOUNT::AccountID _customerId,const int _star,const string& _text = "", CommentListId _commentListId = -1):
-			ID(),customerId(_customerId),text(_text),commentListId(_commentListId)
-		{
-			if (_star < 0 || star>5)throw std::runtime_error("评分不对！");
-			star = _star;
-			time(&timeCreated);
-		}
+		Comment(ACCOUNT::AccountID _customerId,const int _star,const string& _text = ""
+			, CommentListId _commentListId = Nodata);
+		Comment(ACCOUNT::AccountID _customerId, const int _star, const string& _text
+			, CommentListId _commentListId, time_t _timeCreated);
 		const string& getText()const;
 		const double& getStar()const;
 		ACCOUNT::AccountID getCustomeId()const;
@@ -35,15 +33,17 @@ namespace COMMENT {
 		void remove();                          //同时从commentList中移除
 	private:
 		time_t timeCreated;
-		int star = -1;
+		int star = Nodata;
 		string text;
 		ACCOUNT::AccountID customerId;
-		CommentListId commentListId = -1;      //-1代表不属于任何评论列表
+		CommentListId commentListId = Nodata;      //Nodata代表不属于任何评论列表
 	};
 
 	class CommentList :public AbstractID::ID<CommentList>
 	{
 	public:
+		CommentList() = default;
+		CommentList(std::initializer_list<CommentId> il);
 		void addComment(CommentId);                      //增加评论/Comment的行为不在此处处理
 		void sortByTime(bool reverse = false);           //按时间排序
 		void sortByStar(bool reverse = false);           //按评分排序

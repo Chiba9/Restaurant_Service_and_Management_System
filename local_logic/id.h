@@ -1,5 +1,5 @@
-//#ifndef ID_H
-//#define ID_H
+#ifndef ID_H
+#define ID_H
 
 /*********ID系统************/
 //所有对象的基类，实现编号系统
@@ -38,4 +38,4 @@ namespace AbstractID {
 	unsigned ID<T>::count = 0;
 }
 
-//#endif // !ID_H
+#endif // !ID_H

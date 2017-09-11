@@ -5,6 +5,18 @@ void TABLE::Table::setCurrentOrder(ORDER::OrderId val)
 	currentOrder = val;
 }
 
+TABLE::Table::Table(unsigned _size) :tableSize(_size)
+{
+
+}
+
+TABLE::Table::Table(TableStatus _status, ORDER::OrderId _currentOrder, ACCOUNT::AccountID _waiterId, unsigned _tableSize) :
+	status(_status), currentOrder(_currentOrder),
+	waiterId(_waiterId), tableSize(_tableSize)
+{
+
+}
+
 TABLE::TableStatus TABLE::Table::getStatus()
 {
 	return getStatus();
@@ -23,8 +35,8 @@ void TABLE::Table::setStatus(TABLE::TableStatus val)
 void TABLE::Table::reset()
 {
 	setStatus(empty);
-	setCurrentOrder(-1);
-	setWaiter(-1);
+	setCurrentOrder(Nodata);
+	setWaiter(Nodata);
 }
 
 ACCOUNT::AccountID TABLE::Table::getWaiter() const

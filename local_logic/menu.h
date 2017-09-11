@@ -1,4 +1,6 @@
-#pragma once
+#ifndef MENU_H
+#define MENU_H
+
 #include <set>
 #include "id.h"
 #include "dish.h"
@@ -13,11 +15,10 @@ namespace MENU {
 		friend void swap(Menu&, Menu&);
 	private:
 		DISH::DishIdList dishIdList;
-		std::string name;
 		std::string _type;
 	public:
 		Menu() = default;
-		Menu(std::string n) :ID(), name(n) {}
+		Menu(std::string t) :ID(), _type(n) {}
 		~Menu();
 		Menu(const Menu&);
 		Menu(Menu&&);
@@ -34,3 +35,4 @@ namespace MENU {
 	};
 	std::ostream& operator<<(std::ostream& os, const Menu& m);
 }
+#endif // !MENU_H

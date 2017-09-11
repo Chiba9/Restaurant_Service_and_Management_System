@@ -6,6 +6,7 @@
 #include "dish.h"
 #include "account.h"
 #include "order.h"
+#include <initializer_list>
 
 namespace TASK {
 	using TaskId = unsigned;
@@ -24,10 +25,10 @@ namespace TASK {
 		DISH::DishId dishId;           //包含的菜品ID
 		ORDER::OrderId orderId;        //所属订单ID
 		taskStatus status;             //任务完成情况
-		ACCOUNT::AccountID chefId;     //负责厨师ID，默认为-1
+		ACCOUNT::AccountID chefId;     //负责厨师ID，默认为Nodata
 		time_t timeCreated;	           //创建时间
 		bool urgement = false;         //用户催单情况，默认为false
-		double star = -1 ;
+		double star = Nodata ;
 	public:
 		Task() = default;
 		//全构造函数
@@ -56,6 +57,9 @@ namespace TASK {
 	private:
 		std::vector<TaskId> taskIdList;
 	public:
+		TaskList() = default;
+		TaskList(std::initializer_list<TaskId> il) :
+			taskIdList(il){}
 		double star() const;
 		std::size_t size() const;
 		void addTask(const TaskId& _taskId);

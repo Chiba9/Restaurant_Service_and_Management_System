@@ -9,8 +9,8 @@ ORDER::Order::Order(ACCOUNT::AccountID _customerId, ACCOUNT::AccountID _waiterId
 	commentId(_commentId) {}
 
 ORDER::Order::Order(ACCOUNT::AccountID _customerId, TABLE::TableId _tableId) :
-	commentId(-1), customerId(_customerId), status(waitingForComming),
-	tableId(_tableId), waiterId(-1), taskIdSet()
+	commentId(Nodata), customerId(_customerId), status(waitingForComming),
+	tableId(_tableId), waiterId(Nodata), taskIdSet()
 {
 	time(&timeCreated);
 }

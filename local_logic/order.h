@@ -1,5 +1,5 @@
 #ifndef ORDER_H
-#define  ORDER_H
+#define ORDER_H
 #include "id.h"
 #include "task.h"
 #include<set>

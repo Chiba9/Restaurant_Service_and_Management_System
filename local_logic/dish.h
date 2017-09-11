@@ -21,7 +21,7 @@ namespace DISH {
 	{
 		friend void swap(Dish&, Dish&);
 	public:
-		Dish(const std::string& n, double p, const std::string& pic = "", Spicy s = Normal, COMMENT::CommentListId c = -1) :
+		Dish(const std::string& n, double p, const std::string& pic = "", Spicy s = Normal, COMMENT::CommentListId c = Nodata) :
 			ID(),name(n), price(p), picture(pic), spice(s), commentList(c) {}
 		Dish(const Dish&);
 		Dish(Dish&&);
@@ -71,4 +71,4 @@ namespace DISH {
 		unsigned size() const{ return dishVec.size(); }
 	};
 }
-#endif // DISH_H
+#endif // !DISH_H
