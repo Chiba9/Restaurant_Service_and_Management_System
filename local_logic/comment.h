@@ -35,7 +35,7 @@ namespace COMMENT {
 		void remove();                          //同时从commentList中移除
 	private:
 		time_t timeCreated;
-		int star;
+		int star = -1;
 		string text;
 		ACCOUNT::AccountID customerId;
 		CommentListId commentListId = -1;      //-1代表不属于任何评论列表
@@ -49,6 +49,7 @@ namespace COMMENT {
 		void sortByStar(bool reverse = false);           //按评分排序
 		void removeComment(unsigned commentId);          //删除列表内评论/Comment的行为不在此处处理
 		size_t size()const { return CommentIdList.size(); }
+		double star();
 		//以下为隐藏内部结构设计
 		std::vector<unsigned>::iterator begin();
 		std::vector<unsigned>::iterator end();  

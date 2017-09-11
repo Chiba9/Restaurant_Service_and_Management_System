@@ -22,8 +22,6 @@ ACCOUNT::AccountID COMMENT::Comment::getCustomeId() const
 	return customerId;
 }
 
-
-
 COMMENT::CommentListId COMMENT::Comment::getCommentListId() const
 {
 	return commentListId;
@@ -60,20 +58,20 @@ void COMMENT::CommentList::sortByTime(bool reverse /*= false*/)
 {
 	if (!reverse)
 		n_sort([](const CommentId& lhs, const CommentId& rhs)->bool
-	{return CommentMap.at(lhs)->getTime() < CommentMap.at(rhs)->getTime(); },reverse);
+	{return RESTAURANT::Restaurant::CommentMap.at(lhs)->getTime() < RESTAURANT::Restaurant::CommentMap.at(rhs)->getTime(); },reverse);
 	else
 		n_sort([](const CommentId& lhs, const CommentId& rhs)->bool
-	{return CommentMap.at(lhs)->getTime() > CommentMap.at(rhs)->getTime(); }, reverse);
+	{return RESTAURANT::Restaurant::CommentMap.at(lhs)->getTime() > RESTAURANT::Restaurant::CommentMap.at(rhs)->getTime(); }, reverse);
 }
 
 void COMMENT::CommentList::sortByStar(bool reverse /*= false*/)
 {
 	if (!reverse)
 		n_sort([](const CommentId& lhs, const CommentId& rhs)->bool
-	{return CommentMap.at(lhs)->getStar() < CommentMap.at(rhs)->getStar(); }, reverse);
+	{return RESTAURANT::Restaurant::CommentMap.at(lhs)->getStar() < RESTAURANT::Restaurant::CommentMap.at(rhs)->getStar(); }, reverse);
 	else
 		n_sort([](const CommentId& lhs, const CommentId& rhs)->bool
-	{return CommentMap.at(lhs)->getStar() > CommentMap.at(rhs)->getStar(); }, reverse);
+	{return RESTAURANT::Restaurant::CommentMap.at(lhs)->getStar() > RESTAURANT::Restaurant::CommentMap.at(rhs)->getStar(); }, reverse);
 }
 
 void COMMENT::CommentList::removeComment(unsigned _commentId)
@@ -86,6 +84,14 @@ void COMMENT::CommentList::removeComment(unsigned _commentId)
 			++it;
 	}
 
+}
+
+double COMMENT::CommentList::star()
+{
+	double sum = 0.0;
+	for (CommentId _id : CommentIdList)
+		sum += RESTAURANT::Restaurant::CommentMap.at(_id)->getStar();
+	return sum / CommentIdList.size();
 }
 
 std::vector<unsigned>::iterator COMMENT::CommentList::begin()

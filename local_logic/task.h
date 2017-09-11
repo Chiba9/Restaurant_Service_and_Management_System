@@ -27,6 +27,7 @@ namespace TASK {
 		ACCOUNT::AccountID chefId;     //负责厨师ID，默认为-1
 		time_t timeCreated;	           //创建时间
 		bool urgement = false;         //用户催单情况，默认为false
+		double star = -1 ;
 	public:
 		Task() = default;
 		//全构造函数
@@ -46,7 +47,8 @@ namespace TASK {
 		ORDER::OrderId getOrderId() const;
 		ACCOUNT::AccountID getChefId() const;
 		taskStatus getStatus() const;
-		
+		double getStar() const;
+		void setStar(double val);
 	};
 
 	class TaskList:AbstractID::ID<TaskList>
@@ -54,6 +56,8 @@ namespace TASK {
 	private:
 		std::vector<TaskId> taskIdList;
 	public:
+		double star() const;
+		std::size_t size() const;
 		void addTask(const TaskId& _taskId);
 		void removeTask(const TaskId& _taskId);
 		std::vector<TaskId>::iterator begin();

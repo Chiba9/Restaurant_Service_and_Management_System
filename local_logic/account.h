@@ -28,6 +28,7 @@ namespace ACCOUNT {
 		string& PassWord() { return passWord; }
 		const string& HeadPicture()const { return headPicture; }
 		string& HeadPicture() { return headPicture; }
+		void changePassword(const string& prevPassWord, const string& newPassWord);
 	protected:
 		virtual ~Account() = default;
 		Account() = default;
@@ -48,10 +49,11 @@ namespace ACCOUNT {
 	class CustomerAccount :public Account
 	{
 	private:
-		COMMENT::CommentList commentIdList;
+		COMMENT::CommentList commentIdList = -1;
 		set<ORDER::Order> previousOrderIdSet;             //以前的订单
 		unsigned currentOrderId;
 		static string defaultCustomerHeadPicture;
+		static double VIPmoney;
 		bool VIP = false;                             //是否是VIP
 		double moneyUsed = 0.0;                       //花掉的钱
 		bool checkOrder();                            //检查订单是否下达
@@ -61,21 +63,23 @@ namespace ACCOUNT {
 		virtual Permission permission()const override{return customer;}
 		void startOrder(TABLE::TableId _tableId);                     //选桌开始
 		void addTask(DISH::DishId _dishId);                           //增加任务
+		void quitTask(TASK::TaskId _taskId);
+		void finishOrdering();                                        //完成加菜
 		void urgeTask(TASK::TaskId _taskId);                               //催单
 		void writeWaiterComment(int star, string _text = "");
 		void writeDishComment(TASK::TaskId _taskId, int _star, string _text = "");
 		void writeOrderComment(int _star, string _text = "");
-		void finishOrder();
+		void finishCurrentOrder();
 		void SendMessage(const string& m);                            //给服务员发送信息
 		bool isVIP() const;
-		void setVIP(bool);
+		bool checkVIP();
 	};
-
+/*
 	class AdministratorAccount:public Account
 	{
 	public:
 		virtual Permission permission() const override { return administrator; }
-		void addAccount(Permission);
+		void addAccount(Permission _permission);
 		void removeAccount(unsigned id);
 		void addComment();
 		void removeComment(unsigned id);
@@ -85,65 +89,61 @@ namespace ACCOUNT {
 		void removeDishFromMenu(unsigned dishId, unsigned menuId);
 
 		//剩下的东西之后再去实现
+	private:
+		void addCustomer(string _userName, string _password,  string _name = "",string _headpic = "");
 	};
+*/
 
-	class ChefAccount :public Account 
+	class ChefAccount :public Account
 	{
-
 	public:
-		virtual Permission permission() const override{return chef;}
-		void getTask(unsigned id);
+		virtual Permission permission() const override { return chef; }
+		void getTask(TASK::TaskId _id);
 		void FinishTask();
-		double star();                      //返回评级
+		bool free();                        //是否有空
+		double star();                      //返回评分
 		unsigned finishedTaskCount();       //返回完成的任务数
+		TASK::TaskList getPreviousTaskList() const;
 		//现在缺少构造函数！
 	private:
 		static string defaultCustomerHeadPicture;
-		unsigned currentTask;
-		set<unsigned> taskIdSet;            
-		set<unsigned> taskIdFinished;
-	};
+		TASK::TaskId currentTask = -1;
+		TASK::TaskList previousTaskList;
+	}
 
 	class WaiterAccount:public Account
 	{
-		friend void CustomerAccount::finishOrder();
+		friend void CustomerAccount::finishCurrentOrder();
 	public:
 		virtual Permission permission() const override { return waiter; }
-		void getTable(unsigned id);
+		TABLE::TableId getTable() const;
+		bool free();
 		double star();                        //返回评级
 		unsigned finishedOrderCount();        //返回完成的订单数量
-		void reserveMassage(const string& m); //接收顾客发出的信息
+		string reserveMassage(const string& m); //接收顾客发出的信息
 		void setTable(TABLE::TableId _tableId);//同时改变Table类中的服务员对象
 		void addComment(COMMENT::CommentId _commetId);
 		COMMENT::CommentList getCommentIdList() const;
 		//现在缺少构造函数！
 	private:
-		void FinishTable();                 //被CustomerAccount::finishOrder()调用，不能单独调用
-		TABLE::TableId currentTable;
-		set<unsigned> OrderIdFinished;
+		//被CustomerAccount::finishOrder()调用，不能单独调用，同时设定桌子（桌子由服务员管理）
+		void FinishTable();           
+		TABLE::TableId currentTable = -1;
+		set<ORDER::OrderId> previousOrder;
 		static string defaultCustomerHeadPicture;
-		COMMENT::CommentList commentIdList;
+		COMMENT::CommentListId commentListId;
 	};
 
 	class ManagerAccount :public Account
 	{
 	public:
 		virtual Permission permission() const override { return manager; }
-		WaiterAccount* getWaiter(unsigned id);
-		ChefAccount* getChef(unsigned id);
+		//WaiterAccount* getWaiter(unsigned id);
+		//ChefAccount* getChef(unsigned id);
 		//现在缺少构造函数！
 	private:
-		set<unsigned> chefSet;
-		set<unsigned> waiterSet;
 		static string defaultCustomerHeadPicture;
 	};
 }
-
-
-
-
-
-
-
 
 #endif //ACCOUNT_H

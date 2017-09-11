@@ -18,8 +18,12 @@ namespace TABLE
 	public:
 		TableStatus getStatus();
 		void reset();                      //重置该桌信息
-		ORDER::OrderId getOrder() const;
-		ACCOUNT::AccountID getWaiter() const;
+		ACCOUNT::AccountID getWaiter() const;		
+		void setWaiter(ACCOUNT::AccountID val);
 		unsigned getTableSize();
+		ORDER::OrderId getCurrentOrder() const;
+		void setCurrentOrder(ORDER::OrderId val);
+		TABLE::TableStatus getStatus() const;
+		void setStatus(TABLE::TableStatus val);
 	};
 }

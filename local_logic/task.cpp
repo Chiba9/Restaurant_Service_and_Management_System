@@ -1,6 +1,6 @@
 #include "task.h"
 #include "id.h"
-
+#include "restaurant.h"
 #include "dish.h"
 #include "account.h"
 #include "order.h"
@@ -19,7 +19,7 @@ TASK::Task::Task(DISH::DishId _dishId, ORDER::OrderId _orderId):
 
 double TASK::Task::price() const
 {
-	return DishMap.at(dishId)->getPrice();
+	return RESTAURANT::Restaurant::DishMap.at(dishId)->getPrice();
 }
 
 void TASK::Task::urge()
@@ -65,6 +65,36 @@ ACCOUNT::AccountID TASK::Task::getChefId() const
 TASK::taskStatus TASK::Task::getStatus() const
 {
 	return status;
+}
+
+double TASK::Task::getStar() const
+{
+	return star;
+}
+
+void TASK::Task::setStar(double val)
+{
+	star = val;
+}
+
+double TASK::TaskList::star() const
+{
+	double sum = 0.0;
+	unsigned count = 0;
+	for (TaskId _id : taskIdList)
+		if (RESTAURANT::Restaurant::TaskMap.at(_id)->getStar() != -1) {
+			sum += RESTAURANT::Restaurant::TaskMap.at(_id)->getStar();
+			++count;
+		}
+	if (count != 0)
+		return sum / count;
+	else
+		return -1;
+}
+
+std::size_t TASK::TaskList::size() const
+{
+	return taskIdList.size();
 }
 
 void TASK::TaskList::addTask(const TaskId& _taskId)

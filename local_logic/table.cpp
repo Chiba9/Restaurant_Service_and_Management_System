@@ -1,27 +1,48 @@
 #include"table.h"
+
+void TABLE::Table::setCurrentOrder(ORDER::OrderId val)
+{
+	currentOrder = val;
+}
+
 TABLE::TableStatus TABLE::Table::getStatus()
+{
+	return getStatus();
+}
+
+TABLE::TableStatus TABLE::Table::getStatus() const
 {
 	return status;
 }
 
-void TABLE::Table::reset()
+void TABLE::Table::setStatus(TABLE::TableStatus val)
 {
-	status = empty;
-	currentOrder = -1;
-	waiterId = -1;
+	status = val;
 }
 
-ORDER::OrderId TABLE::Table::getOrder() const
+void TABLE::Table::reset()
 {
-	return currentOrder;
+	setStatus(empty);
+	setCurrentOrder(-1);
+	setWaiter(-1);
 }
 
 ACCOUNT::AccountID TABLE::Table::getWaiter() const
 {
-	return waiterId;
+	return getWaiter();
 }
 
 unsigned TABLE::Table::getTableSize()
 {
 	return tableSize;
+}
+
+void TABLE::Table::setWaiter(ACCOUNT::AccountID val)
+{
+	waiterId = val;
+}
+
+ORDER::OrderId TABLE::Table::getCurrentOrder() const
+{
+	return currentOrder;
 }

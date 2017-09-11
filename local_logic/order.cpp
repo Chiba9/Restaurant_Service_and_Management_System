@@ -79,7 +79,6 @@ void ORDER::Order::setWaiterId(ACCOUNT::AccountID val)
 double ORDER::Order::price(const DISCOUNT::Discount *discount)const
 {
 	return discount->netPrice(price(), 
-		dynamic_cast<ACCOUNT::CustomerAccount*>
-		(RESTAURANT::Restaurant::AccountMap.at(customerId).get())->isVIP());
+		RESTAURANT::Restaurant::CustomerAccountMap.at(customerId)->isVIP());
 }
 
