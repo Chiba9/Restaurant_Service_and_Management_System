@@ -149,6 +149,7 @@
   <ItemGroup>
     <ClInclude Include="account.h" />
     <ClInclude Include="comment.h" />
+    <ClInclude Include="common.h" />
     <ClInclude Include="discount.h" />
     <ClInclude Include="dish.h" />
     <ClInclude Include="id.h" />
@@ -165,7 +166,6 @@
     <ClCompile Include="comment.cpp" />
     <ClCompile Include="discount.cpp" />
     <ClCompile Include="dish.cpp" />
-    <ClCompile Include="main.cpp" />
     <ClCompile Include="menu.cpp" />
     <ClCompile Include="order.cpp" />
     <ClCompile Include="people.cpp" />

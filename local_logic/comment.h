@@ -1,31 +1,32 @@
 #ifndef COMMENT_H
 #define COMMENT_H
+#include "common.h"
 #include "id.h"
 #include <time.h>
 #include<vector>
 #include<string>
 #include<stdexcept>
-#include "account.h"
 #include<initializer_list>
+#include "restaurant.h"
+
 /************************************************************************/
 /* 评论类Comment,评论列表CommentList                                     */
 /************************************************************************/
+
 namespace COMMENT {
 	using std::string;
-	using CommentId = unsigned;
-	using CommentListId = unsigned;
 	enum target{dish,order,waiter};
 	class Comment:public AbstractID::ID<Comment>
 	{
 	public:
 		Comment() = default;
-		Comment(ACCOUNT::AccountID _customerId,const int _star,const string& _text = ""
+		Comment(AccountID _customerId,const int _star,const string& _text = ""
 			, CommentListId _commentListId = Nodata);
-		Comment(ACCOUNT::AccountID _customerId, const int _star, const string& _text
+		Comment(AccountID _customerId, const int _star, const string& _text
 			, CommentListId _commentListId, time_t _timeCreated);
 		const string& getText()const;
-		const double& getStar()const;
-		ACCOUNT::AccountID getCustomeId()const;
+		double getStar()const;
+		AccountID getCustomeId()const;
 		CommentListId getCommentListId()const;
 		void setText(const string& _text);
 		time_t getTime()const;
@@ -35,7 +36,7 @@ namespace COMMENT {
 		time_t timeCreated;
 		int star = Nodata;
 		string text;
-		ACCOUNT::AccountID customerId;
+		AccountID customerId;
 		CommentListId commentListId = Nodata;      //Nodata代表不属于任何评论列表
 	};
 

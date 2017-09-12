@@ -4,10 +4,10 @@
 #include<time.h>
 #include<algorithm>
 #include"id.h"
-
+#include "RestaurantSystem.h"
 using namespace COMMENT;
 
-COMMENT::Comment::Comment(ACCOUNT::AccountID _customerId, const int _star,
+COMMENT::Comment::Comment(AccountID _customerId, const int _star,
 	const string& _text /*= ""*/, CommentListId _commentListId /*= Nodata*/) :
 	ID(), customerId(_customerId), text(_text), commentListId(_commentListId)
 {
@@ -16,7 +16,7 @@ COMMENT::Comment::Comment(ACCOUNT::AccountID _customerId, const int _star,
 	time(&timeCreated);
 }
 
-COMMENT::Comment::Comment(ACCOUNT::AccountID _customerId, const int _star,
+COMMENT::Comment::Comment(AccountID _customerId, const int _star,
 	const string& _text, CommentListId _commentListId, time_t _timeCreated):
 	customerId(_customerId),star(_star),text(_text),
 	commentListId(_commentListId),timeCreated(_timeCreated){}
@@ -26,17 +26,17 @@ const std::string& COMMENT::Comment::getText() const
 	return text;
 }
 
-const double& COMMENT::Comment::getStar() const
+double COMMENT::Comment::getStar() const
 {
 	return star;
 }
 
-ACCOUNT::AccountID COMMENT::Comment::getCustomeId() const
+AccountID COMMENT::Comment::getCustomeId() const
 {
-	return customerId;
+	return AccountID();
 }
 
-COMMENT::CommentListId COMMENT::Comment::getCommentListId() const
+CommentListId COMMENT::Comment::getCommentListId() const
 {
 	return commentListId;
 }

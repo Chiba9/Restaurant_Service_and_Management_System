@@ -1,14 +1,19 @@
 #include "order.h"
+#include "restaurant.h"
+#include <time.h>
+#include "discount.h"
+#include "task.h"
+#include "comment.h"
+#include "account.h"
 
-
-ORDER::Order::Order(ACCOUNT::AccountID _customerId, ACCOUNT::AccountID _waiterId, 
-		TABLE::TableId _tableId, OrderStatus _status, const time_t& _timeCreated, 
-		std::set<TASK::TaskId> _taskIdSet, COMMENT::CommentId _commentId):
+ORDER::Order::Order(AccountID _customerId, AccountID _waiterId,
+	TableId _tableId, OrderStatus _status, const time_t& _timeCreated,
+	std::set<TaskId> _taskIdSet, CommentId _commentId) :
 	customerId(_customerId), waiterId(_waiterId), tableId(_tableId),
 	status(_status), timeCreated(_timeCreated), taskIdSet(_taskIdSet),
 	commentId(_commentId) {}
 
-ORDER::Order::Order(ACCOUNT::AccountID _customerId, TABLE::TableId _tableId) :
+ORDER::Order::Order(AccountID _customerId, TableId _tableId) :
 	commentId(Nodata), customerId(_customerId), status(waitingForComming),
 	tableId(_tableId), waiterId(Nodata), taskIdSet()
 {
@@ -18,17 +23,17 @@ ORDER::Order::Order(ACCOUNT::AccountID _customerId, TABLE::TableId _tableId) :
 double ORDER::Order::price()const
 {
 	double ret = 0.0;
-	for (TASK::TaskId id : taskIdSet)
+	for (TaskId id : taskIdSet)
 		ret += RESTAURANT::Restaurant::TaskMap.at(id)->price();
 	return ret;
 }
 
-void ORDER::Order::addTask(TASK::TaskId _taskId)
+void ORDER::Order::addTask(TaskId _taskId)
 {
 	taskIdSet.insert(_taskId);
 }
 
-void ORDER::Order::removeTask(TASK::TaskId _taskId)
+void ORDER::Order::removeTask(TaskId _taskId)
 {
 	if (taskIdSet.find(_taskId) != taskIdSet.cend())
 		taskIdSet.erase(_taskId);
@@ -46,39 +51,39 @@ void ORDER::Order::setStatus(OrderStatus _status)
 	status = _status;
 }
 
-COMMENT::CommentId ORDER::Order::getCommentId() const
+CommentId ORDER::Order::getCommentId() const
 {
 	return commentId;
 }
 
 double ORDER::Order::star() const
 {
-	return CommentMap.at(commentId)->getStar();
+	return RESTAURANT::Restaurant::CommentMap.at(commentId)->getStar();
 }
 
-TABLE::TableId ORDER::Order::getTableId() const
+TableId ORDER::Order::getTableId() const
 {
 	return tableId;
 }
 
-const std::set<TASK::TaskId> ORDER::Order::getTaskIdSet() const
+const std::set<TaskId> ORDER::Order::getTaskIdSet() const
 {
 	return taskIdSet;
 }
 
-ACCOUNT::AccountID ORDER::Order::getWaiterId() const
+AccountID ORDER::Order::getWaiterId() const
 {
 	return waiterId;
 }
 
-void ORDER::Order::setWaiterId(ACCOUNT::AccountID val)
+void ORDER::Order::setWaiterId(AccountID val)
 {
 	waiterId = val;
 }
 
 double ORDER::Order::price(const DISCOUNT::Discount *discount)const
 {
-	return discount->netPrice(price(), 
+	return discount->netPrice(price(),
 		RESTAURANT::Restaurant::CustomerAccountMap.at(customerId)->isVIP());
 }
 

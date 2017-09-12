@@ -4,13 +4,14 @@
 #include "dish.h"
 #include "account.h"
 #include "order.h"
+#include "RestaurantSystem.h"
 
-TASK::Task::Task(DISH::DishId _dishId, ORDER::OrderId _orderId, taskStatus _status,
-	ACCOUNT::AccountID _chefId, time_t _timeCreated, bool _urgement):
+TASK::Task::Task(DishId _dishId, OrderId _orderId, taskStatus _status,
+	AccountID _chefId, time_t _timeCreated, bool _urgement):
 	dishId(_dishId),orderId(_orderId),status(_status),
 	chefId(_chefId),timeCreated(_timeCreated),urgement(_urgement){}
 
-TASK::Task::Task(DISH::DishId _dishId, ORDER::OrderId _orderId):
+TASK::Task::Task(DishId _dishId, OrderId _orderId):
 	dishId(_dishId),orderId(_orderId),status(TASK::choosing),
 	chefId(Nodata),urgement(false)
 {
@@ -37,7 +38,7 @@ void TASK::Task::setStatus(taskStatus _status)
 	status = _status;
 }
 
-void TASK::Task::setOrder(ORDER::OrderId _orderId)
+void TASK::Task::setOrder(OrderId _orderId)
 {
 	orderId = _orderId;
 }
@@ -47,17 +48,17 @@ void TASK::Task::setChef(unsigned _chefId)
 	chefId = _chefId;
 }
 
-DISH::DishId TASK::Task::getDishId() const
+DishId TASK::Task::getDishId() const
 {
 	return dishId;
 }
 
-ORDER::OrderId TASK::Task::getOrderId() const
+OrderId TASK::Task::getOrderId() const
 {
 	return orderId;
 }
 
-ACCOUNT::AccountID TASK::Task::getChefId() const
+AccountID TASK::Task::getChefId() const
 {
 	return chefId;
 }
@@ -111,22 +112,22 @@ void TASK::TaskList::removeTask(const TaskId& _taskId)
 			++it;
 }
 
-std::vector<TASK::TaskId>::iterator TASK::TaskList::begin()
+std::vector<TaskId>::iterator TASK::TaskList::begin()
 {
 	return taskIdList.begin();
 }
 
-std::vector<TASK::TaskId>::iterator TASK::TaskList::end()
+std::vector<TaskId>::iterator TASK::TaskList::end()
 {
 	return taskIdList.end();
 }
 
-std::vector<TASK::TaskId>::const_iterator TASK::TaskList::cbgin() const
+std::vector<TaskId>::const_iterator TASK::TaskList::cbgin() const
 {
 	return taskIdList.cbegin();
 }
 
-std::vector<TASK::TaskId>::const_iterator TASK::TaskList::cend() const
+std::vector<TaskId>::const_iterator TASK::TaskList::cend() const
 {
 	return cend();
 }

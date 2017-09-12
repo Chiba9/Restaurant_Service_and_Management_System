@@ -1,15 +1,18 @@
 #ifndef DISH_H
 #define DISH_H
+
+#include "common.h"
+#include "restaurant.h"
 #include"id.h"
 #include<string>
 #include<set>
 #include<vector>
 #include "comment.h"
+
 namespace DISH {
 	class Dish;
 	class Menu;
 	class COMMENT::Comment;
-	using COMMENT::CommentId;
 	std::ostream& operator<<(std::ostream&, const Dish&);
 	using DishId = unsigned;
 
@@ -21,7 +24,7 @@ namespace DISH {
 	{
 		friend void swap(Dish&, Dish&);
 	public:
-		Dish(const std::string& n, double p, const std::string& pic = "", Spicy s = Normal, COMMENT::CommentListId c = Nodata) :
+		Dish(const std::string& n, double p, const std::string& pic = "", Spicy s = Normal, CommentListId c = Nodata) :
 			ID(),name(n), price(p), picture(pic), spice(s), commentList(c) {}
 		Dish(const Dish&);
 		Dish(Dish&&);
@@ -31,7 +34,7 @@ namespace DISH {
 		unsigned CommentNumber()const;
 		const std::string& getName()const;
 		const std::string& getPicture()const;
-		const COMMENT::CommentListId& getCommentListId()const;
+		const CommentListId& getCommentListId()const;
 		const Spicy& getSpice()const;
 		const std::string& getDescription();
 		double getPrice()const;
@@ -44,7 +47,7 @@ namespace DISH {
 	private:
 		std::string picture;                //菜图
 		std::string name;                   //菜名
-		COMMENT::CommentListId commentList;    //评价列表（类值行为）
+		CommentListId commentList;    //评价列表（类值行为）
 		std::string description;
 		double price;                   //价格
 		Spicy spice;                    //辣度（枚举类型）

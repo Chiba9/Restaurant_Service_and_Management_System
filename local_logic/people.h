@@ -1,8 +1,12 @@
 #ifndef PEOPLE_H
 #define PEOPLE_H
+
+#include "common.h"
+
 #include "id.h"
 #include<iostream>
 #include<string>
+
 namespace PEOPLE {
 
 	class People :public AbstractID::ID<People>

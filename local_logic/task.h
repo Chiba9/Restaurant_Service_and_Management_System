@@ -1,12 +1,11 @@
 #ifndef TASK_H
 #define TASK_H
+
 #include<string>
 #include<vector>
 #include "id.h"
-#include "dish.h"
-#include "account.h"
-#include "order.h"
 #include <initializer_list>
+#include "common.h"
 
 namespace TASK {
 	using TaskId = unsigned;
@@ -22,31 +21,31 @@ namespace TASK {
 	class Task:public AbstractID::ID<Task>
 	{
 	private:
-		DISH::DishId dishId;           //包含的菜品ID
-		ORDER::OrderId orderId;        //所属订单ID
+		DishId dishId;           //包含的菜品ID
+		OrderId orderId;        //所属订单ID
 		taskStatus status;             //任务完成情况
-		ACCOUNT::AccountID chefId;     //负责厨师ID，默认为Nodata
+		AccountID chefId;     //负责厨师ID，默认为Nodata
 		time_t timeCreated;	           //创建时间
 		bool urgement = false;         //用户催单情况，默认为false
 		double star = Nodata ;
 	public:
 		Task() = default;
 		//全构造函数
-		Task(DISH::DishId _dishId, ORDER::OrderId _orderId, taskStatus _status,
-			ACCOUNT::AccountID _chefId, time_t _timeCreated, bool _urgement);
+		Task(DishId _dishId, OrderId _orderId, taskStatus _status,
+			AccountID _chefId, time_t _timeCreated, bool _urgement);
 		//用户点单时的构造函数
-		Task(DISH::DishId _dishId, ORDER::OrderId _orderId);
+		Task(DishId _dishId, OrderId _orderId);
 		double price() const;                //返回菜价
 		void urge();
 		bool getUrgement() const;                  //返回催单情况，不能修改
 		void setStatus(taskStatus _status);  //设定任务情况
 		//设定订单、只完成自身的操作、被订单的添加任务函数调用
-		void setOrder(ORDER::OrderId _orderId);
+		void setOrder(OrderId _orderId);
 		//设定厨师、只完成自身的操作、被厨师的接受任务函数调用
 		void setChef(unsigned _chefId);      
-		DISH::DishId getDishId() const;
-		ORDER::OrderId getOrderId() const;
-		ACCOUNT::AccountID getChefId() const;
+		DishId getDishId() const;
+		OrderId getOrderId() const;
+		AccountID getChefId() const;
 		taskStatus getStatus() const;
 		double getStar() const;
 		void setStar(double val);

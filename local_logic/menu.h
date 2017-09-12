@@ -1,9 +1,11 @@
 #ifndef MENU_H
 #define MENU_H
 
+#include "common.h"
 #include <set>
 #include "id.h"
 #include "dish.h"
+
 /**********菜单类 Menu**********/
 //包含菜品的列表
 namespace MENU {
@@ -18,10 +20,8 @@ namespace MENU {
 		std::string _type;
 	public:
 		Menu() = default;
-		Menu(std::string t) :ID(), _type(n) {}
+		Menu(std::string t) :ID(), _type(t) {}
 		~Menu();
-		Menu(const Menu&);
-		Menu(Menu&&);
 		Menu& addDishId(const unsigned&);
 		const std::string& type() const { return _type; }
 		std::string& type() { return _type; }

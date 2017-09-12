@@ -3,6 +3,8 @@
 #include "dish.h"
 #include<string>
 #include<set>
+#include "RestaurantSystem.h"
+#include "dish.h"
 
 using namespace MENU;
 void MENU::swap(Menu &lhs, Menu &rhs)
@@ -17,20 +19,6 @@ Menu::~Menu()
 
 }
 
-Menu::Menu(const Menu &m) :ID(m)
-{
-	for (unsigned d : m.dishIdList.getDishVec())
-		dishIdList.addDish(d);
-}
-
-
-Menu::Menu(Menu&& m) :ID(m)
-{
-	for (unsigned d : m.dishIdList.getDishVec()) {
-		dishIdList.addDish(d);
-	}
-}
-
 Menu& Menu::addDishId(const unsigned &d)
 {
 	dishIdList.addDish(d);
@@ -42,7 +30,7 @@ unsigned Menu::size() const
 	return dishIdList.size();
 }
 
-const const DISH::DishIdList& Menu::getDishesId() const
+const DISH::DishIdList& Menu::getDishesId() const
 {
 	return dishIdList;
 }
@@ -51,7 +39,7 @@ std::ostream&MENU::operator<<(std::ostream& os, const Menu& m)
 {
 	for (auto i : m.getDishesId().getDishVec())
 	{
-		os << m.getDishesId[i];
+		os << *RESTAURANT::Restaurant::DishMap.at(i);
 	}
 	return os;
 }

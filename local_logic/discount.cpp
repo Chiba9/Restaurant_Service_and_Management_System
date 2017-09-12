@@ -1,5 +1,5 @@
 #include "discount.h"
-
+#include "RestaurantSystem.h"
 DISCOUNT::Discount::Discount(double _threshold) :
 	threshold(_threshold), threshold_VIP(_threshold){}
 

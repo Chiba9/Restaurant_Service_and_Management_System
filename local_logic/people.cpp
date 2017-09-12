@@ -1,5 +1,5 @@
 #include "people.h"
-
+#include "RestaurantSystem.h"
 const std::string & PEOPLE::People::getName() const
 {
 	return name;

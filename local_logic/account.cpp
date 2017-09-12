@@ -1,10 +1,13 @@
 #include "account.h"
 #include "people.h"
-
+#include "order.h"
+#include "table.h"
+#include "dish.h"
 #include <stdexcept>
 #include <vector>
 #include <memory>
 #include <map>
+
 using std::shared_ptr;
 using std::make_shared;
 using RESTAURANT::Restaurant;
@@ -107,7 +110,7 @@ bool ACCOUNT::CustomerAccount::checkOrder()
 	else return true;
 }
 
-bool ACCOUNT::CustomerAccount::checkTask(TASK::TaskId _taskId)
+bool ACCOUNT::CustomerAccount::checkTask(TaskId _taskId)
 {
 	checkOrder();
 	if (Restaurant::OrderMap.at(currentOrderId)->getTaskIdSet().find(_taskId)
@@ -117,19 +120,19 @@ bool ACCOUNT::CustomerAccount::checkTask(TASK::TaskId _taskId)
 		return true;
 }
 
-ACCOUNT::CustomerAccount& ACCOUNT::CustomerAccount::removeComment(COMMENT::CommentId id)
+ACCOUNT::CustomerAccount& ACCOUNT::CustomerAccount::removeComment(CommentId id)
 {
 	commentIdList.removeComment(id);
 }
 
-void ACCOUNT::CustomerAccount::startOrder(TABLE::TableId _tableId)
+void ACCOUNT::CustomerAccount::startOrder(TableId _tableId)
 {
-	shared_ptr<ORDER::Order> temp = make_shared<ORDER::Order>(id(),_tableId);
+	shared_ptr<ORDER::Order> temp = make_shared<ORDER::Order>(id(), _tableId);
 	Restaurant::TableMap.at(_tableId)->setStatus(TABLE::unassigned);
 	Restaurant::OrderMap.insert({ temp->id(),temp });
 }
 
-void ACCOUNT::CustomerAccount::addTask(DISH::DishId _dishId)
+void ACCOUNT::CustomerAccount::addTask(DishId _dishId)
 {
 	if (checkOrder()) {
 		if (Restaurant::OrderMap.at(currentOrderId)->getStatus() == ORDER::ordering
@@ -143,7 +146,7 @@ void ACCOUNT::CustomerAccount::addTask(DISH::DishId _dishId)
 	}
 }
 
-void ACCOUNT::CustomerAccount::quitTask(TASK::TaskId _taskId)
+void ACCOUNT::CustomerAccount::quitTask(TaskId _taskId)
 {
 	checkTask(_taskId);
 	shared_ptr<TASK::Task> _task = Restaurant::TaskMap.at(_taskId);
@@ -163,13 +166,13 @@ void ACCOUNT::CustomerAccount::finishOrdering()
 	if (checkOrder())
 	{
 		shared_ptr<ORDER::Order> _order = Restaurant::OrderMap.at(currentOrderId);
-		for (TASK::TaskId _taskId : _order->getTaskIdSet())
+		for (TaskId _taskId : _order->getTaskIdSet())
 			Restaurant::TaskMap.at(_taskId)->setStatus(TASK::waiting);
 		_order->setStatus(ORDER::cooking);
 	}
 }
 
-void ACCOUNT::CustomerAccount::urgeTask(TASK::TaskId _taskId)
+void ACCOUNT::CustomerAccount::urgeTask(TaskId _taskId)
 {
 	checkTask(_taskId);
 	shared_ptr<TASK::Task> _task = Restaurant::TaskMap.at(_taskId);
@@ -191,7 +194,7 @@ void ACCOUNT::CustomerAccount::writeWaiterComment(int _star, string _text /*= ""
 }
 
 
-void ACCOUNT::CustomerAccount::writeDishComment(TASK::TaskId _taskId, int _star, string _text /*= ""*/)
+void ACCOUNT::CustomerAccount::writeDishComment(TaskId _taskId, int _star, string _text /*= ""*/)
 {
 	checkTask(_taskId);
 	shared_ptr<DISH::Dish> _pDish = Restaurant::DishMap.at(Restaurant::TaskMap.at(_taskId)->getDishId());
@@ -217,7 +220,7 @@ void ACCOUNT::CustomerAccount::finishCurrentOrder()
 	shared_ptr<ORDER::Order> _order = Restaurant::OrderMap.at(currentOrderId);
 	moneyUsed += _order->price();
 	AccountID _waiterId = _order->getWaiterId();
-	for (TASK::TaskId _taskId : _order->getTaskIdSet())
+	for (TaskId _taskId : _order->getTaskIdSet())
 		Restaurant::TaskMap.at(_taskId)->setStatus(TASK::finished);
 	auto _waiter = Restaurant::WaiterAccountMap.at(_waiterId);
 	_waiter->FinishTable();
@@ -247,25 +250,25 @@ bool ACCOUNT::CustomerAccount::checkVIP()
 
 /*void ACCOUNT::AdministratorAccount::addAccount(Permission _permission)
 {
-	switch (_permission)
-	{
-	case ACCOUNT::customer:
-		break;
-	case ACCOUNT::administrator:
-		break;
-	case ACCOUNT::chef:
-		break;
-	case ACCOUNT::waiter:
-		break;
-	case ACCOUNT::manager:
-		break;
-	default:
-		break;
-	}
+switch (_permission)
+{
+case ACCOUNT::customer:
+break;
+case ACCOUNT::administrator:
+break;
+case ACCOUNT::chef:
+break;
+case ACCOUNT::waiter:
+break;
+case ACCOUNT::manager:
+break;
+default:
+break;
+}
 }*/
 
 
-void ACCOUNT::ChefAccount::getTask(TASK::TaskId _id)
+void ACCOUNT::ChefAccount::getTask(TaskId _id)
 {
 	if (Restaurant::CurrentTaskMap.find(_id) != Restaurant::CurrentTaskMap.end())
 	{
@@ -306,7 +309,7 @@ TASK::TaskList ACCOUNT::ChefAccount::getPreviousTaskList() const
 	return previousTaskList;
 }
 
-TABLE::TableId ACCOUNT::WaiterAccount::getTable() const
+TableId ACCOUNT::WaiterAccount::getTable() const
 {
 	return currentTable;
 }
@@ -331,12 +334,12 @@ std::string ACCOUNT::WaiterAccount::reserveMassage(const string& m)
 	return m;
 }
 
-void ACCOUNT::WaiterAccount::setTable(TABLE::TableId _tableId)
+void ACCOUNT::WaiterAccount::setTable(TableId _tableId)
 {
 	currentTable = _tableId;
 }
 
-void ACCOUNT::WaiterAccount::addComment(COMMENT::CommentId _commetId)
+void ACCOUNT::WaiterAccount::addComment(CommentId _commetId)
 {
 	Restaurant::CommentListMap.at(commentListId)->addComment(_commetId);
 }
@@ -351,4 +354,3 @@ void ACCOUNT::WaiterAccount::FinishTable()
 	Restaurant::TableMap.at(currentTable)->reset();
 	currentTable = Nodata;
 }
-

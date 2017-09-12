@@ -6,7 +6,7 @@
 #include<set>
 #include<map>
 #include<stdexcept>
-
+#include "RestaurantSystem.h"
 
 using namespace DISH;
 using RESTAURANT::Restaurant;
@@ -39,7 +39,7 @@ const std::string &Dish::getPicture() const
 	return picture;
 }
 
-const COMMENT::CommentListId &Dish::getCommentListId() const
+const CommentListId& Dish::getCommentListId() const
 {
 	return commentList;
 }
@@ -64,7 +64,7 @@ void Dish::setPicture(const std::string &pic)
 	picture = pic;
 }
 
-void Dish::addComment(COMMENT::CommentId commentId)
+void Dish::addComment(CommentId commentId)
 {
 	Restaurant::CommentListMap[commentList]->addComment(commentId);
 }
@@ -87,7 +87,7 @@ void DISH::Dish::setDescription(const std::string& d)
 double DISH::Dish::star() const
 {
 	double sum = 0.0;
-	for (COMMENT::CommentId c : *Restaurant::CommentListMap.at(commentList))
+	for (CommentId c : *Restaurant::CommentListMap.at(commentList))
 		sum += Restaurant::CommentMap.at(c)->getStar();
 	return sum / Restaurant::CommentListMap.at(commentList)->size();
 }
@@ -113,31 +113,31 @@ void DISH::swap(Dish &lhs, Dish &rhs)
 	std::swap(lhs.commentList, rhs.commentList);
 }
 
-void DISH::DishIdList::n_sort(bool compareDishId(const DishId&, const DishId&))
+void DishIdList::n_sort(bool compareDishId(const DishId&, const DishId&))
 {
 	std::sort(dishVec.begin(), dishVec.end(), compareDishId);
 }
 
-DISH::DishId& DISH::DishIdList::operator[](size_t n)
+DishId& DishIdList::operator[](size_t n)
 {
 	if (n > dishVec.size())
 		throw std::out_of_range("输入下标过大！");
 	return dishVec[n];
 }
 
-const DishId & DISH::DishIdList::operator[](size_t n) const
+const DishId & DishIdList::operator[](size_t n) const
 {
 	if (n > dishVec.size())
 		throw std::out_of_range("输入下标过大！");
 	return dishVec[n];
 }
 
-void DISH::DishIdList::addDish(DishId id)
+void DishIdList::addDish(DishId id)
 {
 	dishVec.push_back(id);
 }
 
-void DISH::DishIdList::sortByPrice(bool reverse /*= false*/)
+void DishIdList::sortByPrice(bool reverse /*= false*/)
 {
 	if(!reverse)
 		n_sort([](const DishId& lhs, const DishId& rhs)->bool
@@ -147,7 +147,7 @@ void DISH::DishIdList::sortByPrice(bool reverse /*= false*/)
 		{return Restaurant::DishMap.at(lhs)->getPrice() > Restaurant::DishMap.at(rhs)->getPrice(); });
 }
 
-void DISH::DishIdList::sortByName(bool reverse /*= false*/)
+void DishIdList::sortByName(bool reverse /*= false*/)
 {
 	if (!reverse)
 		n_sort([](const DishId& lhs, const DishId& rhs)->bool
@@ -157,7 +157,7 @@ void DISH::DishIdList::sortByName(bool reverse /*= false*/)
 	{return Restaurant::DishMap.at(lhs)->getName() > Restaurant::DishMap.at(rhs)->getName(); });
 }
 
-void DISH::DishIdList::sortByStar(bool reverse /*= false*/)
+void DishIdList::sortByStar(bool reverse /*= false*/)
 {
 	if (!reverse)
 		n_sort([](const DishId& lhs, const DishId& rhs)->bool
@@ -167,7 +167,7 @@ void DISH::DishIdList::sortByStar(bool reverse /*= false*/)
 	{return Restaurant::DishMap.at(lhs)->star() > Restaurant::DishMap.at(rhs)->star(); });
 }
 
-void DISH::DishIdList::sortBySpice(bool reverse /*= false*/)
+void DishIdList::sortBySpice(bool reverse /*= false*/)
 {
 	if (!reverse)
 		n_sort([](const DishId& lhs, const DishId& rhs)->bool
@@ -177,7 +177,7 @@ void DISH::DishIdList::sortBySpice(bool reverse /*= false*/)
 	{return Restaurant::DishMap.at(lhs)->getSpice() > Restaurant::DishMap.at(rhs)->getSpice(); });
 }
 
-void DISH::DishIdList::sortByHeat(bool reverse /*= false*/)
+void DishIdList::sortByHeat(bool reverse /*= false*/)
 {
 	if (!reverse)
 		n_sort([](const DishId& lhs, const DishId& rhs)->bool

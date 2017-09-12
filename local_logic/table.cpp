@@ -1,6 +1,6 @@
 #include"table.h"
-
-void TABLE::Table::setCurrentOrder(ORDER::OrderId val)
+#include "RestaurantSystem.h"
+void TABLE::Table::setCurrentOrder(OrderId val)
 {
 	currentOrder = val;
 }
@@ -10,7 +10,7 @@ TABLE::Table::Table(unsigned _size) :tableSize(_size)
 
 }
 
-TABLE::Table::Table(TableStatus _status, ORDER::OrderId _currentOrder, ACCOUNT::AccountID _waiterId, unsigned _tableSize) :
+TABLE::Table::Table(TableStatus _status, OrderId _currentOrder, AccountID _waiterId, unsigned _tableSize) :
 	status(_status), currentOrder(_currentOrder),
 	waiterId(_waiterId), tableSize(_tableSize)
 {
@@ -39,7 +39,7 @@ void TABLE::Table::reset()
 	setWaiter(Nodata);
 }
 
-ACCOUNT::AccountID TABLE::Table::getWaiter() const
+AccountID TABLE::Table::getWaiter() const
 {
 	return getWaiter();
 }
@@ -49,12 +49,12 @@ unsigned TABLE::Table::getTableSize()
 	return tableSize;
 }
 
-void TABLE::Table::setWaiter(ACCOUNT::AccountID val)
+void TABLE::Table::setWaiter(AccountID val)
 {
 	waiterId = val;
 }
 
-ORDER::OrderId TABLE::Table::getCurrentOrder() const
+OrderId TABLE::Table::getCurrentOrder() const
 {
 	return currentOrder;
 }
