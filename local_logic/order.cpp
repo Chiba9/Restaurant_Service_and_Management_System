@@ -87,3 +87,8 @@ double ORDER::Order::price(const DISCOUNT::Discount *discount)const
 		RESTAURANT::Restaurant::CustomerAccountMap.at(customerId)->isVIP());
 }
 
+bool ORDER::operator<(const Order& lhs, const Order& rhs)
+{
+	return lhs.id() < rhs.id();
+}
+

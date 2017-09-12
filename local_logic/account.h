@@ -77,7 +77,7 @@ namespace ACCOUNT {
 		void finishCurrentOrder();
 		void SendMessage(const string& m);                            //给服务员发送信息
 		bool isVIP() const;
-		bool checkVIP();
+		void checkVIP();
 	};
 	/*
 	class AdministratorAccount:public Account

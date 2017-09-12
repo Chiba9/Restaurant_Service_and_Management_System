@@ -57,6 +57,7 @@ namespace ORDER
 		AccountID getWaiterId() const;
 		void setWaiterId(AccountID val);
 	};
+	bool operator<(const Order& lhs, const Order& rhs);
 }
 
 #endif // !ORDER_H

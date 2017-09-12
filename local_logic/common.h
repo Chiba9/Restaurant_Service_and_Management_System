@@ -55,13 +55,4 @@ namespace TASK {
 	class TaskList;
 }
 
-
-
-
-
-
-
-
-
-
 #endif // COMMON_H

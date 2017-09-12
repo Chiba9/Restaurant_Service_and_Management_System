@@ -123,18 +123,20 @@ bool ACCOUNT::CustomerAccount::checkTask(TaskId _taskId)
 ACCOUNT::CustomerAccount& ACCOUNT::CustomerAccount::removeComment(CommentId id)
 {
 	commentIdList.removeComment(id);
+	return *this;
 }
 
 void ACCOUNT::CustomerAccount::startOrder(TableId _tableId)
 {
-	shared_ptr<ORDER::Order> temp = make_shared<ORDER::Order>(id(), _tableId);
+/*	ORDER::Order _temp(id(), -1, _tableId, ORDER::waitingForComming, time_t(), std::set<ORDER::OrderId>(), -1);
+	shared_ptr<ORDER::Order> temp = make_shared<ORDER::Order>();
 	Restaurant::TableMap.at(_tableId)->setStatus(TABLE::unassigned);
-	Restaurant::OrderMap.insert({ temp->id(),temp });
+	Restaurant::OrderMap.insert({ temp->id(),temp });*/
 }
 
 void ACCOUNT::CustomerAccount::addTask(DishId _dishId)
 {
-	if (checkOrder()) {
+	/*if (checkOrder()) {
 		if (Restaurant::OrderMap.at(currentOrderId)->getStatus() == ORDER::ordering
 			|| Restaurant::OrderMap.at(currentOrderId)->getStatus() == ORDER::cooking
 			|| Restaurant::OrderMap.at(currentOrderId)->getStatus() == ORDER::eating)
@@ -143,7 +145,7 @@ void ACCOUNT::CustomerAccount::addTask(DishId _dishId)
 			Restaurant::TaskMap.insert({ temp->id(),temp });
 		}
 		else throw std::runtime_error("¶©µ¥×´Ì¬ÓÐÎó£¡");
-	}
+	}*/
 }
 
 void ACCOUNT::CustomerAccount::quitTask(TaskId _taskId)
@@ -163,13 +165,14 @@ void ACCOUNT::CustomerAccount::quitTask(TaskId _taskId)
 
 void ACCOUNT::CustomerAccount::finishOrdering()
 {
+	/*
 	if (checkOrder())
 	{
 		shared_ptr<ORDER::Order> _order = Restaurant::OrderMap.at(currentOrderId);
 		for (TaskId _taskId : _order->getTaskIdSet())
 			Restaurant::TaskMap.at(_taskId)->setStatus(TASK::waiting);
 		_order->setStatus(ORDER::cooking);
-	}
+	}*/
 }
 
 void ACCOUNT::CustomerAccount::urgeTask(TaskId _taskId)
@@ -206,16 +209,16 @@ void ACCOUNT::CustomerAccount::writeDishComment(TaskId _taskId, int _star, strin
 
 void ACCOUNT::CustomerAccount::writeOrderComment(int _star, string _text /*= ""*/)
 {
-	checkOrder();
+	/*checkOrder();
 	auto _pOrder = Restaurant::OrderMap.at(currentOrderId);
 	shared_ptr<COMMENT::Comment> _comment = make_shared<COMMENT::Comment>(id(), _star, _text);
 	_comment->reTarget(_pOrder->getCommentId());
-	commentIdList.addComment(_comment->id());
+	commentIdList.addComment(_comment->id());*/
 }
 
 void ACCOUNT::CustomerAccount::finishCurrentOrder()
 {
-	checkOrder();
+	/*checkOrder();
 	previousOrderIdSet.emplace(currentOrderId);
 	shared_ptr<ORDER::Order> _order = Restaurant::OrderMap.at(currentOrderId);
 	moneyUsed += _order->price();
@@ -226,7 +229,7 @@ void ACCOUNT::CustomerAccount::finishCurrentOrder()
 	_waiter->FinishTable();
 	_waiter->setTable(Nodata);
 	_order->setStatus(ORDER::finished);
-	checkVIP();
+	checkVIP();*/
 }
 
 void ACCOUNT::CustomerAccount::SendMessage(const string& m)
@@ -242,7 +245,7 @@ bool ACCOUNT::CustomerAccount::isVIP() const
 }
 
 
-bool ACCOUNT::CustomerAccount::checkVIP()
+void ACCOUNT::CustomerAccount::checkVIP()
 {
 	if (moneyUsed > VIPmoney)
 		VIP = true;
