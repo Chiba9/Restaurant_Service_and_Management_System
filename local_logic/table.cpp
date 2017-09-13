@@ -7,7 +7,7 @@ void TABLE::Table::setCurrentOrder(OrderId val)
 
 TABLE::Table::Table(unsigned _size) :tableSize(_size)
 {
-
+	RESTAURANT::Restaurant::TableMap.insert({ id(),std::make_shared<Table>(*this) });
 }
 
 TABLE::Table::Table(TableStatus _status, OrderId _currentOrder, AccountID _waiterId, unsigned _tableSize) :

@@ -4,7 +4,7 @@
 #include "common.h"
 
 #include "id.h"
-
+#include<time.h>
 #include<set>
 
 
@@ -26,15 +26,15 @@ namespace ORDER
 	class Order :public AbstractID::ID<Order>
 	{
 	private:
-		AccountID customerId;       /*顾客ID*/
-		AccountID waiterId;		 /*服务员ID*/
-		TableId tableId;				 /*对应桌号*/
-		OrderStatus status;                  /*订单状态*/
+		AccountID customerId = -1;       /*顾客ID*/
+		AccountID waiterId = -1;		 /*服务员ID*/
+		TableId tableId = -1;				 /*对应桌号*/
+		OrderStatus status = waitingForComming;                  /*订单状态*/
 		time_t timeCreated;				     /*创建时间*/
 		std::set<TaskId> taskIdSet;    /*购物车(菜篮）*/
-		CommentId commentId;        /*订单评价*/
+		CommentId commentId = -1;        /*订单评价*/
 	public:
-		Order() = default;
+		Order() { time(&timeCreated); }
 		Order(const Order&) = default;
 		//全构造函数
 		Order(AccountID _customerId, AccountID _waiterId,
@@ -56,6 +56,8 @@ namespace ORDER
 		const std::set<TaskId> getTaskIdSet()const;
 		AccountID getWaiterId() const;
 		void setWaiterId(AccountID val);
+		void setTable(TableId _tableId) { tableId = _tableId; }
+		void setCustomer(AccountID _customer) { customerId = _customer; }
 	};
 	bool operator<(const Order& lhs, const Order& rhs);
 }

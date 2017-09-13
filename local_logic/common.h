@@ -55,4 +55,5 @@ namespace TASK {
 	class TaskList;
 }
 
+#include "restaurant.h"
 #endif // COMMON_H

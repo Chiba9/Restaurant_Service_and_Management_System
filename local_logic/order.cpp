@@ -8,16 +8,17 @@
 
 ORDER::Order::Order(AccountID _customerId, AccountID _waiterId,
 	TableId _tableId, OrderStatus _status, const time_t& _timeCreated,
-	std::set<TaskId> _taskIdSet, CommentId _commentId) :
+	std::set<TaskId> _taskIdSet, CommentId _commentId):
 	customerId(_customerId), waiterId(_waiterId), tableId(_tableId),
 	status(_status), timeCreated(_timeCreated), taskIdSet(_taskIdSet),
 	commentId(_commentId) {}
 
-ORDER::Order::Order(AccountID _customerId, TableId _tableId) :
+ORDER::Order::Order(AccountID _customerId, TableId _tableId):
 	commentId(Nodata), customerId(_customerId), status(waitingForComming),
 	tableId(_tableId), waiterId(Nodata), taskIdSet()
 {
 	time(&timeCreated);
+	RESTAURANT::Restaurant::OrderMap.insert({ id(),std::make_shared<Order>(*this) });
 }
 
 double ORDER::Order::price()const

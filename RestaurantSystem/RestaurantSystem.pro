@@ -1,6 +1,6 @@
 #-------------------------------------------------
 #
-# Project created by QtCreator 2017-09-12T13:10:22
+# Project created by QtCreator 2017-09-12T17:34:36
 #
 #-------------------------------------------------
 
@@ -25,12 +25,16 @@ DEFINES += QT_DEPRECATED_WARNINGS
 
 SOURCES += \
         main.cpp \
-    login.cpp \
-    dialog.cpp
+        basewindow.cpp \
+    mytitlebar.cpp \
+    login.cpp
 
 HEADERS += \
-    login.h \
-    dialog.h
+        basewindow.h \
+    mytitlebar.h \
+    login.h
 
 FORMS += \
+        basewindow.ui \
+    mytitlebar.ui \
     login.ui

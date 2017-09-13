@@ -25,7 +25,14 @@ namespace DISH {
 		friend void swap(Dish&, Dish&);
 	public:
 		Dish(const std::string& n, double p, const std::string& pic = "", Spicy s = Normal, CommentListId c = Nodata) :
-			ID(),name(n), price(p), picture(pic), spice(s), commentList(c) {}
+			ID(),name(n), price(p), picture(pic), spice(s), commentList(c)
+		{
+			if (commentList == -1) {
+				COMMENT::CommentList _commentList(true);
+				commentList = _commentList.id();
+				RESTAURANT::Restaurant::DishMap.insert({ id(),std::make_shared<Dish>(*this) });
+			}
+		}
 		Dish(const Dish&);
 		Dish(Dish&&);
 		Dish& operator=(Dish);
@@ -61,6 +68,7 @@ namespace DISH {
 		std::vector<DishId> dishVec;    //存储Dish的ID
 		void n_sort(bool compareDishId(const DishId&,const DishId&)); //排序的内部实现
 	public:
+		DishIdList() {}
 		const std::vector<DishId>& getDishVec()const{ return dishVec; }
 		DishId& operator[](size_t);
 		const DishId& operator[](size_t) const;

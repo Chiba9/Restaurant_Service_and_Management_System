@@ -43,7 +43,11 @@ namespace COMMENT {
 	class CommentList :public AbstractID::ID<CommentList>
 	{
 	public:
-		CommentList() = default;
+		CommentList(){ }
+		CommentList(bool newComment) {
+			if (newComment)
+				RESTAURANT::Restaurant::CommentListMap.insert({ id(), std::make_shared<CommentList>() });
+		}
 		CommentList(std::initializer_list<CommentId> il);
 		void addComment(CommentId);                      //增加评论/Comment的行为不在此处处理
 		void sortByTime(bool reverse = false);           //按时间排序

@@ -33,6 +33,7 @@ namespace RESTAURANT
 	private:
 		static DISCOUNT::Discount *discount;
 	};
+	
 }
 
 #endif // !RESTAURANT_H

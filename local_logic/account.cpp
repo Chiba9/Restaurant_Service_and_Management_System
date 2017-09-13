@@ -7,6 +7,7 @@
 #include <vector>
 #include <memory>
 #include <map>
+#include <time.h>
 
 using std::shared_ptr;
 using std::make_shared;
@@ -63,6 +64,7 @@ ACCOUNT::string ACCOUNT::Account::defaultManagerHeadPicture = "defaultManagerHea
 ACCOUNT::Account::Account(string n, string p) :userName(n), passWord(p)
 {
 	time(&timeCreated);
+	Restaurant::AccountMap.insert({ id(), std::make_shared<Account>(*this) });
 }
 
 void ACCOUNT::Account::setDefaultHeadPicture(Permission _permission)
@@ -92,13 +94,14 @@ void ACCOUNT::Account::setDefaultHeadPicture(Permission _permission)
 ACCOUNT::Account::Account(string n, string p, string pic) :
 	userName(n), passWord(p), headPicture(pic)
 {
-
+	time(&timeCreated);
+	Restaurant::AccountMap.insert({ id(), std::make_shared<Account>(*this) });
 }
 
-ACCOUNT::Account::Account(string n, string p, time_t t, string pic) :
+ACCOUNT::Account::Account(string n, string p, string pic, time_t t) :
 	userName(n), passWord(p), timeCreated(t), headPicture(pic)
 {
-	time(&timeCreated);
+
 }
 
 double ACCOUNT::CustomerAccount::VIPmoney = 500;
@@ -120,23 +123,54 @@ bool ACCOUNT::CustomerAccount::checkTask(TaskId _taskId)
 		return true;
 }
 
+void ACCOUNT::CustomerAccount::creatCommentList()
+{
+	if (commentListId == -1) {
+		auto _commentList = make_shared<COMMENT::CommentList>();
+		commentListId = _commentList->id();
+	}
+}
+
+ACCOUNT::CustomerAccount::CustomerAccount(string n, string p)
+	:Account(n,p)
+{
+	Restaurant::CustomerAccountMap.insert({ id(),std::make_shared<CustomerAccount>(*this) });
+	creatCommentList();
+	type = customer;
+}
+
+ACCOUNT::CustomerAccount::CustomerAccount(string n, string p, string pic)
+	:Account(n,p,pic)
+{
+	Restaurant::CustomerAccountMap.insert({ id(),std::make_shared<CustomerAccount>(*this) });
+	creatCommentList();
+	type = customer;
+}
+
+ACCOUNT::CustomerAccount::CustomerAccount(string n, string p, string pic, time_t t)
+	:Account(n,p,pic,t)
+{
+	creatCommentList();
+	type = customer;
+}
+
 ACCOUNT::CustomerAccount& ACCOUNT::CustomerAccount::removeComment(CommentId id)
 {
-	commentIdList.removeComment(id);
+	Restaurant::CommentMap.at(id)->reTarget(-1);
+	Restaurant::CommentListMap.at(commentListId)->removeComment(id);
 	return *this;
 }
 
 void ACCOUNT::CustomerAccount::startOrder(TableId _tableId)
 {
-/*	ORDER::Order _temp(id(), -1, _tableId, ORDER::waitingForComming, time_t(), std::set<ORDER::OrderId>(), -1);
-	shared_ptr<ORDER::Order> temp = make_shared<ORDER::Order>();
+	shared_ptr<ORDER::Order> temp = make_shared<ORDER::Order>(id(),_tableId);
 	Restaurant::TableMap.at(_tableId)->setStatus(TABLE::unassigned);
-	Restaurant::OrderMap.insert({ temp->id(),temp });*/
+	Restaurant::OrderMap.insert({ temp->id(),temp });
 }
 
 void ACCOUNT::CustomerAccount::addTask(DishId _dishId)
 {
-	/*if (checkOrder()) {
+	if (checkOrder()) {
 		if (Restaurant::OrderMap.at(currentOrderId)->getStatus() == ORDER::ordering
 			|| Restaurant::OrderMap.at(currentOrderId)->getStatus() == ORDER::cooking
 			|| Restaurant::OrderMap.at(currentOrderId)->getStatus() == ORDER::eating)
@@ -145,7 +179,7 @@ void ACCOUNT::CustomerAccount::addTask(DishId _dishId)
 			Restaurant::TaskMap.insert({ temp->id(),temp });
 		}
 		else throw std::runtime_error("订单状态有误！");
-	}*/
+	}
 }
 
 void ACCOUNT::CustomerAccount::quitTask(TaskId _taskId)
@@ -165,14 +199,15 @@ void ACCOUNT::CustomerAccount::quitTask(TaskId _taskId)
 
 void ACCOUNT::CustomerAccount::finishOrdering()
 {
-	/*
+	
 	if (checkOrder())
 	{
 		shared_ptr<ORDER::Order> _order = Restaurant::OrderMap.at(currentOrderId);
 		for (TaskId _taskId : _order->getTaskIdSet())
 			Restaurant::TaskMap.at(_taskId)->setStatus(TASK::waiting);
 		_order->setStatus(ORDER::cooking);
-	}*/
+	}
+	
 }
 
 void ACCOUNT::CustomerAccount::urgeTask(TaskId _taskId)
@@ -193,7 +228,7 @@ void ACCOUNT::CustomerAccount::writeWaiterComment(int _star, string _text /*= ""
 	shared_ptr<COMMENT::Comment> _comment = make_shared<COMMENT::Comment>(id(), _star, _text);
 	auto _waiter = Restaurant::WaiterAccountMap.at(_waiterId).get();
 	_comment->reTarget(_waiter->getCommentIdList().id());//只需要在Comment中操作（见comment.h）
-	commentIdList.addComment(_comment->id());
+	Restaurant::CommentListMap.at(commentListId)->addComment(_comment->id());
 }
 
 
@@ -203,23 +238,23 @@ void ACCOUNT::CustomerAccount::writeDishComment(TaskId _taskId, int _star, strin
 	shared_ptr<DISH::Dish> _pDish = Restaurant::DishMap.at(Restaurant::TaskMap.at(_taskId)->getDishId());
 	shared_ptr<COMMENT::Comment> _comment = make_shared<COMMENT::Comment>(id(), _star, _text);
 	_comment->reTarget(_pDish->getCommentListId());
-	commentIdList.addComment(_comment->id());
+	Restaurant::CommentListMap.at(commentListId)->addComment(_comment->id());
 	Restaurant::TaskMap.at(_taskId)->setStar(_star);
 }
 
 void ACCOUNT::CustomerAccount::writeOrderComment(int _star, string _text /*= ""*/)
 {
-	/*checkOrder();
+	checkOrder();
 	auto _pOrder = Restaurant::OrderMap.at(currentOrderId);
 	shared_ptr<COMMENT::Comment> _comment = make_shared<COMMENT::Comment>(id(), _star, _text);
 	_comment->reTarget(_pOrder->getCommentId());
-	commentIdList.addComment(_comment->id());*/
+	Restaurant::CommentListMap.at(commentListId)->addComment(_comment->id());
 }
 
 void ACCOUNT::CustomerAccount::finishCurrentOrder()
 {
-	/*checkOrder();
-	previousOrderIdSet.emplace(currentOrderId);
+	checkOrder();
+	previousOrderIdSet.insert(currentOrderId);
 	shared_ptr<ORDER::Order> _order = Restaurant::OrderMap.at(currentOrderId);
 	moneyUsed += _order->price();
 	AccountID _waiterId = _order->getWaiterId();
@@ -229,7 +264,7 @@ void ACCOUNT::CustomerAccount::finishCurrentOrder()
 	_waiter->FinishTable();
 	_waiter->setTable(Nodata);
 	_order->setStatus(ORDER::finished);
-	checkVIP();*/
+	checkVIP();
 }
 
 void ACCOUNT::CustomerAccount::SendMessage(const string& m)
@@ -270,6 +305,25 @@ break;
 }
 }*/
 
+ACCOUNT::ChefAccount::ChefAccount(string n, string p)
+	:Account(n, p)
+{
+	Restaurant::ChefAccountMap.insert({ id(),std::make_shared<ChefAccount>(*this) });
+	type = chef;
+}
+
+ACCOUNT::ChefAccount::ChefAccount(string n, string p, string pic)
+	: Account(n, p, pic)
+{
+	Restaurant::ChefAccountMap.insert({ id(),std::make_shared<ChefAccount>(*this) });
+	type = chef;
+}
+
+ACCOUNT::ChefAccount::ChefAccount(string n, string p, string pic, time_t t)
+	: Account(n, p, pic, t)
+{
+	type = chef;
+}
 
 void ACCOUNT::ChefAccount::getTask(TaskId _id)
 {
@@ -310,6 +364,29 @@ unsigned ACCOUNT::ChefAccount::finishedTaskCount()
 TASK::TaskList ACCOUNT::ChefAccount::getPreviousTaskList() const
 {
 	return previousTaskList;
+}
+
+ACCOUNT::WaiterAccount::WaiterAccount(string n, string p)
+	:Account(n, p)
+{
+	Restaurant::WaiterAccountMap.insert({ id(),std::make_shared<WaiterAccount>(*this) });
+	type = waiter;
+	creatCommentList();
+}
+
+ACCOUNT::WaiterAccount::WaiterAccount(string n, string p, string pic)
+	: Account(n, p, pic)
+{
+	Restaurant::WaiterAccountMap.insert({ id(),std::make_shared<WaiterAccount>(*this) });
+	type = waiter;
+	creatCommentList();
+}
+
+ACCOUNT::WaiterAccount::WaiterAccount(string n, string p, string pic, time_t t)
+	: Account(n, p, pic, t)
+{
+	type = waiter;
+	creatCommentList();
 }
 
 TableId ACCOUNT::WaiterAccount::getTable() const
@@ -356,4 +433,32 @@ void ACCOUNT::WaiterAccount::FinishTable()
 {
 	Restaurant::TableMap.at(currentTable)->reset();
 	currentTable = Nodata;
+}
+
+void ACCOUNT::WaiterAccount::creatCommentList()
+{
+	if (commentListId == -1) {
+		auto _commentList = make_shared<COMMENT::CommentList>();
+		commentListId = _commentList->id();
+	}
+}
+
+ACCOUNT::ManagerAccount::ManagerAccount(string n, string p)
+	:Account(n, p)
+{
+	Restaurant::ManagerAccountMap.insert({ id(),std::make_shared<ManagerAccount>(*this) });
+	type = manager;
+}
+
+ACCOUNT::ManagerAccount::ManagerAccount(string n, string p, string pic)
+	: Account(n, p, pic)
+{
+	Restaurant::ManagerAccountMap.insert({ id(),std::make_shared<ManagerAccount>(*this) });
+	type = manager;
+}
+
+ACCOUNT::ManagerAccount::ManagerAccount(string n, string p, string pic, time_t t)
+	: Account(n, p, pic, t)
+{
+	type = manager;
 }

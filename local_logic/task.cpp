@@ -16,6 +16,7 @@ TASK::Task::Task(DishId _dishId, OrderId _orderId):
 	chefId(Nodata),urgement(false)
 {
 	time(&timeCreated);
+	RESTAURANT::Restaurant::TaskMap.insert({ id(),std::make_shared<Task>(*this) });
 }
 
 double TASK::Task::price() const

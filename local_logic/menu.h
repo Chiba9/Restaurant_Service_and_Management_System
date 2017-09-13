@@ -20,7 +20,9 @@ namespace MENU {
 		std::string _type;
 	public:
 		Menu() = default;
-		Menu(std::string t) :ID(), _type(t) {}
+		Menu(std::string t) :ID(), _type(t) {
+			RESTAURANT::Restaurant::MenuMap.insert({ id(),std::make_shared<Menu>(*this) });
+		}
 		~Menu();
 		Menu& addDishId(const unsigned&);
 		const std::string& type() const { return _type; }

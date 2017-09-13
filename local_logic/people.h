@@ -2,7 +2,7 @@
 #define PEOPLE_H
 
 #include "common.h"
-
+#include "restaurant.h"
 #include "id.h"
 #include<iostream>
 #include<string>
@@ -13,7 +13,7 @@ namespace PEOPLE {
 	{
 	public:
 		People() = default;
-		explicit People(const std::string &n) :ID(), name(n) {}
+		explicit People(const std::string &n) :ID(), name(n){}
 		const std::string& getName()const;
 	private:
 		std::string name;

@@ -1,22 +1,27 @@
-#ifndef LOGININ_H
-#define LOGININ_H
+#ifndef LOGIN_H
+#define LOGIN_H
 
-#include <QWidget>
+#include "basewindow.h"
 
 namespace Ui {
-class LoginIn;
+class Login;
 }
 
-class LoginIn : public QWidget
+class Login : public BaseWindow
 {
     Q_OBJECT
 
 public:
-    explicit LoginIn(QWidget *parent = 0);
-    ~LoginIn();
+    explicit Login(QWidget *parent = 0);
+    ~Login();
 
 private:
-    Ui::LoginIn *ui;
+    initTitleBar();
+    initMainWindow();
+
+private:
+    Ui::Login *ui;
+
 };
 
-#endif // LOGININ_H
+#endif // LOGIN_H

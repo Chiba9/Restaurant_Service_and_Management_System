@@ -17,12 +17,12 @@ namespace ACCOUNT {
 	using std::string; using std::set;
 
 	//代表权限的枚举类型
-	enum Permission { customer, administrator, chef, waiter, manager };
+	enum Permission { customer = 1, administrator, chef, waiter, manager };
 	//其他账户类的虚基类
 	class Account :public AbstractID::ID<Account>
 	{
 	public:
-		virtual Permission permission() const = 0;
+		virtual Permission permission() const {return type;}
 		const string& UserName()const;
 		string& UserName();
 		const string& PassWord()const;
@@ -30,19 +30,22 @@ namespace ACCOUNT {
 		const string& HeadPicture()const;
 		string& HeadPicture();
 		void changePassword(const string& prevPassWord, const string& newPassWord);
-	protected:
 		virtual ~Account() = default;
+	protected:
+
 		Account() = default;
 		Account(string n, string p);
 		Account(string n, string p, string pic);
-		Account(string n, string p, time_t t, string pic);
+		Account(string n, string p, string pic, time_t t);
 		void setDefaultHeadPicture(Permission _permission);
+		Permission type;   //账号属性
 	private:
 		PEOPLE::People _people;
 		string headPicture;//记得设置默认值！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！
 		string userName;
 		string passWord;
 		time_t timeCreated;
+
 		static string defaultCustomerHeadPicture;
 		static string defaultWaiterHeadPicture;
 		static string defaultChefHeadPicture;
@@ -53,8 +56,8 @@ namespace ACCOUNT {
 	class CustomerAccount :public Account
 	{
 	private:
-		COMMENT::CommentList commentIdList;
-		set<ORDER::Order> previousOrderIdSet;             //以前的订单
+		CommentListId commentListId;
+		set<OrderId> previousOrderIdSet;             //以前的订单
 		unsigned currentOrderId = Nodata;
 		static string defaultCustomerHeadPicture;
 		static double VIPmoney;
@@ -62,8 +65,11 @@ namespace ACCOUNT {
 		double moneyUsed = 0.0;                       //花掉的钱
 		bool checkOrder();                            //检查订单是否下达
 		bool checkTask(TaskId _taskId);         //检查任务是否在订单中
+		void creatCommentList();                //在构造时调用
 	public:
-		using Account::Account;
+		CustomerAccount(string n, string p);
+		CustomerAccount(string n, string p, string pic);
+		CustomerAccount(string n, string p, string pic, time_t t);
 		CustomerAccount& removeComment(CommentId id);   //删除评论
 		virtual Permission permission()const override { return customer; }
 		void startOrder(TableId _tableId);                     //选桌开始
@@ -102,8 +108,9 @@ namespace ACCOUNT {
 	class ChefAccount :public Account
 	{
 	public:
-		ChefAccount() = default;
-		using Account::Account;
+		ChefAccount(string n, string p);
+		ChefAccount(string n, string p, string pic);
+		ChefAccount(string n, string p, string pic, time_t t);
 		virtual Permission permission() const override { return chef; }
 		void getTask(TaskId _id);
 		void FinishTask();
@@ -121,8 +128,9 @@ namespace ACCOUNT {
 	{
 		friend void CustomerAccount::finishCurrentOrder();
 	public:
-		WaiterAccount() = default;
-		using Account::Account;
+		WaiterAccount(string n, string p);
+		WaiterAccount(string n, string p, string pic);
+		WaiterAccount(string n, string p, string pic, time_t t);
 		virtual Permission permission() const override { return waiter; }
 		TableId getTable() const;
 		bool free();
@@ -139,11 +147,15 @@ namespace ACCOUNT {
 		TableId currentTable = Nodata;
 		set<OrderId> previousOrder;
 		CommentListId commentListId;
+		void creatCommentList();                //在构造时调用
 	};
 
 	class ManagerAccount :public Account
 	{
 	public:
+		ManagerAccount(string n, string p);
+		ManagerAccount(string n, string p, string pic);
+		ManagerAccount(string n, string p, string pic, time_t t);
 		virtual Permission permission() const override { return manager; }
 		ManagerAccount() = default;
 		using Account::Account;

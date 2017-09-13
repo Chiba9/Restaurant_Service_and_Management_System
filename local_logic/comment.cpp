@@ -11,9 +11,10 @@ COMMENT::Comment::Comment(AccountID _customerId, const int _star,
 	const string& _text /*= ""*/, CommentListId _commentListId /*= Nodata*/) :
 	ID(), customerId(_customerId), text(_text), commentListId(_commentListId)
 {
-	if (_star < 0 || star>5)throw std::runtime_error("评分不对！");
+	if (_star < 0 || _star>5)throw std::runtime_error("评分不对！");
 	star = _star;
 	time(&timeCreated);
+	RESTAURANT::Restaurant::CommentMap.insert({ id(),std::make_shared<Comment>(*this) });
 }
 
 COMMENT::Comment::Comment(AccountID _customerId, const int _star,
