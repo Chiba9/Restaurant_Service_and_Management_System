@@ -10,7 +10,8 @@ TABLE::Table::Table(unsigned _size) :tableSize(_size)
 	RESTAURANT::Restaurant::TableMap.insert({ id(),std::make_shared<Table>(*this) });
 }
 
-TABLE::Table::Table(TableStatus _status, OrderId _currentOrder, AccountID _waiterId, unsigned _tableSize) :
+TABLE::Table::Table(TableStatus _status, OrderId _currentOrder, AccountID _waiterId, unsigned _tableSize,unsigned _id) :
+	ID(_id),
 	status(_status), currentOrder(_currentOrder),
 	waiterId(_waiterId), tableSize(_tableSize)
 {
@@ -19,7 +20,7 @@ TABLE::Table::Table(TableStatus _status, OrderId _currentOrder, AccountID _waite
 
 TABLE::TableStatus TABLE::Table::getStatus()
 {
-	return getStatus();
+	return status;
 }
 
 TABLE::TableStatus TABLE::Table::getStatus() const
@@ -39,9 +40,9 @@ void TABLE::Table::reset()
 	setWaiter(Nodata);
 }
 
-AccountID TABLE::Table::getWaiter() const
+ACCOUNT::WaiterAccount& TABLE::Table::getWaiter() const
 {
-	return getWaiter();
+	return *RESTAURANT::Restaurant::WaiterAccountMap.at(waiterId);
 }
 
 unsigned TABLE::Table::getTableSize()
@@ -54,7 +55,7 @@ void TABLE::Table::setWaiter(AccountID val)
 	waiterId = val;
 }
 
-OrderId TABLE::Table::getCurrentOrder() const
+ORDER::Order& TABLE::Table::getCurrentOrder() const
 {
-	return currentOrder;
+	return *RESTAURANT::Restaurant::OrderMap.at(currentOrder);
 }

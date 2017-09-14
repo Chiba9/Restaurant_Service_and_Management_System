@@ -4,7 +4,7 @@
 #include "common.h"
 namespace DISCOUNT
 {
-	enum DiscountType {overPercent,allPercent,overMinus};  //≈–∂®’€ø€¿‡–Õ
+	
 	class Discount
 	{
 	public:

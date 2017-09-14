@@ -15,7 +15,6 @@
 
 namespace ORDER
 {
-	using OrderId = unsigned;
 	enum OrderStatus {
 		waitingForComming, /*顾客尚未到达餐馆*/
 		ordering,          /*点菜中*/
@@ -39,12 +38,12 @@ namespace ORDER
 		//全构造函数
 		Order(AccountID _customerId, AccountID _waiterId,
 			TableId _tableId, OrderStatus _status, const time_t& _timeCreated,
-			std::set<TaskId> _taskIdSet, CommentId _commentId);
+			std::set<TaskId> _taskIdSet, CommentId _commentId, unsigned _id);
 		//该构造函数在顾客创建订单时调用，提供有限的参数
 		Order(AccountID _customerId, TableId _tableId);
 
 		double price() const;
-		double price(const DISCOUNT::Discount *discount) const;
+		double priceAfterDiscount() const;
 		//下面两个函数将进行task对象的设定
 		void addTask(TaskId _taskId);
 		void removeTask(TaskId _taskId);
@@ -53,13 +52,20 @@ namespace ORDER
 		CommentId getCommentId() const;
 		double star() const;
 		TableId getTableId()const;
-		const std::set<TaskId> getTaskIdSet()const;
+		const std::set<TaskId>& getTaskIdSet()const;
 		AccountID getWaiterId() const;
 		void setWaiterId(AccountID val);
 		void setTable(TableId _tableId) { tableId = _tableId; }
 		void setCustomer(AccountID _customer) { customerId = _customer; }
 	};
 	bool operator<(const Order& lhs, const Order& rhs);
+
+	template<typename... Args>
+	Order& newOrder(Args&&... args)
+	{
+		OrderId _id = Order(std::forward<Args>(args)...).id();
+		return *RESTAURANT::Restaurant::OrderMap.at(_id);
+	}
 }
 
 #endif // !ORDER_H

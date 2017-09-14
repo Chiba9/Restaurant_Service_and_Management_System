@@ -8,7 +8,8 @@
 
 ORDER::Order::Order(AccountID _customerId, AccountID _waiterId,
 	TableId _tableId, OrderStatus _status, const time_t& _timeCreated,
-	std::set<TaskId> _taskIdSet, CommentId _commentId):
+	std::set<TaskId> _taskIdSet, CommentId _commentId, unsigned _id):
+	ID(_id),
 	customerId(_customerId), waiterId(_waiterId), tableId(_tableId),
 	status(_status), timeCreated(_timeCreated), taskIdSet(_taskIdSet),
 	commentId(_commentId) {}
@@ -67,7 +68,7 @@ TableId ORDER::Order::getTableId() const
 	return tableId;
 }
 
-const std::set<TaskId> ORDER::Order::getTaskIdSet() const
+const std::set<TaskId>& ORDER::Order::getTaskIdSet() const
 {
 	return taskIdSet;
 }
@@ -82,9 +83,9 @@ void ORDER::Order::setWaiterId(AccountID val)
 	waiterId = val;
 }
 
-double ORDER::Order::price(const DISCOUNT::Discount *discount)const
+double ORDER::Order::priceAfterDiscount()const
 {
-	return discount->netPrice(price(),
+	return RESTAURANT::Restaurant::getDiscount()->netPrice(price(),
 		RESTAURANT::Restaurant::CustomerAccountMap.at(customerId)->isVIP());
 }
 

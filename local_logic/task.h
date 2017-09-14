@@ -10,13 +10,13 @@
 namespace TASK {
 	using TaskId = unsigned;
 	enum taskStatus {
-		choosing/*刚刚被用户创立、选择中*/, 
-		waiting/*在任务列表中等待厨师认领*/,
-		cooking/*厨师烹饪中*/, 
-		serving/*上菜中*/, 
-		eating/*顾客正在吃*/,
-		quitted/*用户已放弃该菜*/, 
-		finished/*已完成*/
+		choosing,//刚刚被用户创立、选择中
+		waiting,//在任务列表中等待厨师认领
+		cooking,//厨师烹饪中
+		serving,//上菜中 
+		eating,//顾客正在吃
+		quitted,//用户已放弃该菜
+		finished//完成
 	};
 	class Task:public AbstractID::ID<Task>
 	{
@@ -32,7 +32,7 @@ namespace TASK {
 		Task() = default;
 		//全构造函数
 		Task(DishId _dishId, OrderId _orderId, taskStatus _status,
-			AccountID _chefId, time_t _timeCreated, bool _urgement);
+			AccountID _chefId, time_t _timeCreated, bool _urgement, unsigned _id);
 		//用户点单时的构造函数
 		Task(DishId _dishId, OrderId _orderId);
 		double price() const;                //返回菜价
@@ -49,6 +49,7 @@ namespace TASK {
 		taskStatus getStatus() const;
 		double getStar() const;
 		void setStar(double val);
+		TableId getTableId()const;
 	};
 
 	class TaskList:AbstractID::ID<TaskList>
@@ -68,5 +69,12 @@ namespace TASK {
 		std::vector<TaskId>::const_iterator cbgin()const;
 		std::vector<TaskId>::const_iterator cend()const;
 	};
+
+	template<typename... Args>
+	Task& newTask(Args&&... args)
+	{
+		TaskId _id = Task(std::forward<Args>(args)...).id();
+		return *RESTAURANT::Restaurant::TaskMap.at(_id);
+	}
 }
 #endif //TASK_H

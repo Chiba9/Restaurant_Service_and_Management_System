@@ -7,7 +7,8 @@
 #include "RestaurantSystem.h"
 
 TASK::Task::Task(DishId _dishId, OrderId _orderId, taskStatus _status,
-	AccountID _chefId, time_t _timeCreated, bool _urgement):
+	AccountID _chefId, time_t _timeCreated, bool _urgement,unsigned _id):
+	ID(_id),
 	dishId(_dishId),orderId(_orderId),status(_status),
 	chefId(_chefId),timeCreated(_timeCreated),urgement(_urgement){}
 
@@ -79,6 +80,11 @@ void TASK::Task::setStar(double val)
 	star = val;
 }
 
+TableId TASK::Task::getTableId() const
+{
+	return RESTAURANT::Restaurant::OrderMap.at(orderId)->getTableId();
+}
+
 double TASK::TaskList::star() const
 {
 	double sum = 0.0;
@@ -91,7 +97,7 @@ double TASK::TaskList::star() const
 	if (count != 0)
 		return sum / count;
 	else
-		return Nodata;
+		return 0.0;     //Ã»ÓÐÆÀ·Ö
 }
 
 std::size_t TASK::TaskList::size() const
@@ -130,6 +136,5 @@ std::vector<TaskId>::const_iterator TASK::TaskList::cbgin() const
 
 std::vector<TaskId>::const_iterator TASK::TaskList::cend() const
 {
-	return cend();
+	return taskIdList.cend();
 }
-

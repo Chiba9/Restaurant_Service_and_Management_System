@@ -23,7 +23,7 @@ namespace COMMENT {
 		Comment(AccountID _customerId,const int _star,const string& _text = ""
 			, CommentListId _commentListId = Nodata);
 		Comment(AccountID _customerId, const int _star, const string& _text
-			, CommentListId _commentListId, time_t _timeCreated);
+			, CommentListId _commentListId, time_t _timeCreated, unsigned _id);
 		const string& getText()const;
 		double getStar()const;
 		AccountID getCustomeId()const;
@@ -43,12 +43,11 @@ namespace COMMENT {
 	class CommentList :public AbstractID::ID<CommentList>
 	{
 	public:
-		CommentList(){ }
-		CommentList(bool newComment) {
-			if (newComment)
-				RESTAURANT::Restaurant::CommentListMap.insert({ id(), std::make_shared<CommentList>() });
-		}
-		CommentList(std::initializer_list<CommentId> il);
+		using AbstractID::ID<CommentList>::ID;
+		CommentList() { RESTAURANT::Restaurant::CommentListMap.insert
+		({ id(), std::make_shared<CommentList>(std::vector<CommentId>(), id()) }); }
+		CommentList(std::vector<CommentId> il, unsigned _id):ID(_id),CommentIdList(il){}
+		CommentList(std::initializer_list<CommentId> il, unsigned _id);
 		void addComment(CommentId);                      //增加评论/Comment的行为不在此处处理
 		void sortByTime(bool reverse = false);           //按时间排序
 		void sortByStar(bool reverse = false);           //按评分排序
@@ -64,6 +63,20 @@ namespace COMMENT {
 		std::vector<CommentId> CommentIdList;             //评论ID列表
 		void n_sort(bool compareCommentId(const CommentId& lhs,const CommentId& rhs), bool reverse);  //排序内部实现
 	};
+
+	template<typename... Args>
+	Comment& newComment(Args&&... args)
+	{
+		CommentId _id = Comment(std::forward<Args>(args)...).id();
+		return *RESTAURANT::Restaurant::CommentMap.at(_id);
+	}
+
+	template<typename... Args>
+	CommentList& newCommentList(Args&&... args)
+	{
+		CommentListId _id = CommentList(std::forward<Args>(args)...).id();
+		return *RESTAURANT::Restaurant::CommentListMap.at(_id);
+	}
 }
 
 #endif //COMMENT_H

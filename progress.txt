@@ -1,0 +1,3 @@
+9/13
+顾客初始化时type和commentlistid不对
+服务员接单设置Order

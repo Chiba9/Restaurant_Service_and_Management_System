@@ -15,10 +15,15 @@ COMMENT::Comment::Comment(AccountID _customerId, const int _star,
 	star = _star;
 	time(&timeCreated);
 	RESTAURANT::Restaurant::CommentMap.insert({ id(),std::make_shared<Comment>(*this) });
+	if (_commentListId != Nodata)
+	{
+		RESTAURANT::Restaurant::CommentMap.at(id())->reTarget(_commentListId);
+	}
 }
 
 COMMENT::Comment::Comment(AccountID _customerId, const int _star,
-	const string& _text, CommentListId _commentListId, time_t _timeCreated):
+	const string& _text, CommentListId _commentListId, time_t _timeCreated, unsigned _id):
+	ID(_id),
 	customerId(_customerId),star(_star),text(_text),
 	commentListId(_commentListId),timeCreated(_timeCreated){}
 
@@ -64,7 +69,8 @@ void COMMENT::Comment::remove()
 	commentListId = Nodata;
 }
 
-COMMENT::CommentList::CommentList(std::initializer_list<CommentId> il) :
+COMMENT::CommentList::CommentList(std::initializer_list<CommentId> il, unsigned _id) :
+	ID(_id),
 	CommentIdList(il)
 {
 
@@ -110,9 +116,16 @@ void COMMENT::CommentList::removeComment(unsigned _commentId)
 double COMMENT::CommentList::star()
 {
 	double sum = 0.0;
+	unsigned count = 0;
 	for (CommentId _id : CommentIdList)
-		sum += RESTAURANT::Restaurant::CommentMap.at(_id)->getStar();
-	return sum / CommentIdList.size();
+		if (RESTAURANT::Restaurant::CommentMap.at(_id)->getStar() != Nodata) {
+			sum += RESTAURANT::Restaurant::CommentMap.at(_id)->getStar();
+			++count;
+		}
+	if (count != 0)
+		return sum / count;
+	else
+		return 0.0;       //Ã»ÓÐÆÀ·Ö
 }
 
 std::vector<unsigned>::iterator COMMENT::CommentList::begin()

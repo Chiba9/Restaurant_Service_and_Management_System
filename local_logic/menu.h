@@ -28,13 +28,20 @@ namespace MENU {
 		const std::string& type() const { return _type; }
 		std::string& type() { return _type; }
 		unsigned size()const;
-		void sortByName(bool reserve = false) { dishIdList.sortByName(reserve); }              //按菜名进行排序
-		void sortByPrice(bool reserve = false) { dishIdList.sortByPrice(reserve); }              //按价格进行排序
-		void sortBySpice(bool reserve = false) { dishIdList.sortBySpice(reserve); }              //按价格进行排序
-		void sortByStar(bool reserve = false) { dishIdList.sortByStar(reserve); }               //按菜品的评星进行排序
-		void sortByHeat(bool reserve = false) { dishIdList.sortByHeat(reserve); }               //按热度（评论数量）进行排序
+		void sortByName(bool reserve = false) { dishIdList.sortByName(reserve); }              //按菜名进行排序，默认降序
+		void sortByPrice(bool reserve = false) { dishIdList.sortByPrice(reserve); }              //按价格进行排序，默认降序
+		void sortBySpice(bool reserve = false) { dishIdList.sortBySpice(reserve); }              //按价格进行排序，默认降序
+		void sortByStar(bool reserve = false) { dishIdList.sortByStar(reserve); }               //按菜品的评星进行排序，默认降序
+		void sortByHeat(bool reserve = false) { dishIdList.sortByHeat(reserve); }               //按热度（评论数量）进行排序，默认降序
 		const DISH::DishIdList& getDishesId()const;
 	};
 	std::ostream& operator<<(std::ostream& os, const Menu& m);
+
+	template<typename... Args>
+	Menu& newMenu(Args&&... args)
+	{
+		MenuId _id = Menu(std::forward<Args>(args)...).id();
+		return *RESTAURANT::Restaurant::MenuMap.at(_id);
+	}
 }
 #endif // !MENU_H

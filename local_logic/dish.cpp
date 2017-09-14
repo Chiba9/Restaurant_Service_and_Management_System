@@ -39,9 +39,9 @@ const std::string &Dish::getPicture() const
 	return picture;
 }
 
-const CommentListId& Dish::getCommentListId() const
+const COMMENT::CommentList& Dish::getCommentList() const
 {
-	return commentList;
+	return *RESTAURANT::Restaurant::CommentListMap.at(commentList);
 }
 
 const Spicy &Dish::getSpice() const
@@ -86,10 +86,7 @@ void DISH::Dish::setDescription(const std::string& d)
 
 double DISH::Dish::star() const
 {
-	double sum = 0.0;
-	for (CommentId c : *Restaurant::CommentListMap.at(commentList))
-		sum += Restaurant::CommentMap.at(c)->getStar();
-	return sum / Restaurant::CommentListMap.at(commentList)->size();
+	return RESTAURANT::Restaurant::CommentListMap.at(commentList)->star();
 }
 
 std::ostream& DISH::operator<<(std::ostream& os, const Dish& d)
@@ -139,7 +136,7 @@ void DishIdList::addDish(DishId id)
 
 void DishIdList::sortByPrice(bool reverse /*= false*/)
 {
-	if(!reverse)
+	if(reverse)
 		n_sort([](const DishId& lhs, const DishId& rhs)->bool
 		{return Restaurant::DishMap.at(lhs)->getPrice() < Restaurant::DishMap.at(rhs)->getPrice(); });
 	else
@@ -149,7 +146,7 @@ void DishIdList::sortByPrice(bool reverse /*= false*/)
 
 void DishIdList::sortByName(bool reverse /*= false*/)
 {
-	if (!reverse)
+	if (reverse)
 		n_sort([](const DishId& lhs, const DishId& rhs)->bool
 	{return Restaurant::DishMap.at(lhs)->getName() < Restaurant::DishMap.at(rhs)->getName(); });
 	else
@@ -159,7 +156,7 @@ void DishIdList::sortByName(bool reverse /*= false*/)
 
 void DishIdList::sortByStar(bool reverse /*= false*/)
 {
-	if (!reverse)
+	if (reverse)
 		n_sort([](const DishId& lhs, const DishId& rhs)->bool
 	{return Restaurant::DishMap.at(lhs)->star() < Restaurant::DishMap.at(rhs)->star(); });
 	else
@@ -169,7 +166,7 @@ void DishIdList::sortByStar(bool reverse /*= false*/)
 
 void DishIdList::sortBySpice(bool reverse /*= false*/)
 {
-	if (!reverse)
+	if (reverse)
 		n_sort([](const DishId& lhs, const DishId& rhs)->bool
 	{return Restaurant::DishMap.at(lhs)->getSpice() < Restaurant::DishMap.at(rhs)->getSpice(); });
 	else
@@ -179,10 +176,10 @@ void DishIdList::sortBySpice(bool reverse /*= false*/)
 
 void DishIdList::sortByHeat(bool reverse /*= false*/)
 {
-	if (!reverse)
+	if (reverse)
 		n_sort([](const DishId& lhs, const DishId& rhs)->bool
-	{return Restaurant::DishMap.at(lhs)->getSpice() < Restaurant::DishMap.at(rhs)->getSpice(); });
+	{return Restaurant::DishMap.at(lhs)->getCommentList().size() < Restaurant::DishMap.at(rhs)->getCommentList().size(); });
 	else
 		n_sort([](const DishId& lhs, const DishId& rhs)->bool
-	{return Restaurant::DishMap.at(lhs)->getSpice() > Restaurant::DishMap.at(rhs)->getSpice(); });
+	{return Restaurant::DishMap.at(lhs)->getCommentList().size() > Restaurant::DishMap.at(rhs)->getCommentList().size(); });
 }

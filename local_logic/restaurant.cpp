@@ -1,4 +1,5 @@
 #include "restaurant.h"
+#include "discount.h"
 using namespace RESTAURANT;
 
 map<DishId, std::shared_ptr<DISH::Dish> > RESTAURANT::Restaurant::DishMap = 
@@ -27,4 +28,63 @@ map<TableId, std::shared_ptr<TABLE::Table> > RESTAURANT::Restaurant::TableMap =
 map<TableId, std::shared_ptr<TABLE::Table> >();
 map<OrderId, std::shared_ptr<ORDER::Order> > RESTAURANT::Restaurant::OrderMap = 
 map<OrderId, std::shared_ptr<ORDER::Order> >();
-DISCOUNT::Discount * RESTAURANT::Restaurant::discount = nullptr;
+
+void RESTAURANT::Restaurant::setDiscount(DISCOUNT::Discount* val)
+{
+	discount = val;
+}
+
+
+
+double RESTAURANT::Restaurant::VIPmoney = 500;
+
+void RESTAURANT::Restaurant::setDiscount()
+{
+	discount = new DISCOUNT::OverPercentDiscount(0, 0);     //ƒ¨»œ’€ø€£¨≤ª¥Ú’€
+}
+
+void RESTAURANT::Restaurant::setDiscount(DiscountType _type, double _threshold, 
+	double _threshold_VIP, double _discount, double _discount_VIP)
+{
+	switch (_type)
+	{
+	case RESTAURANT::overPercent:
+		discount = new DISCOUNT::OverPercentDiscount
+		(_threshold, _threshold_VIP, _discount, _discount_VIP);
+		break;
+	case RESTAURANT::allPercent:
+		discount = new DISCOUNT::AllPercentDiscount
+		(_threshold, _threshold_VIP, _discount, _discount_VIP);
+		break;
+	case RESTAURANT::overMinus:
+		discount = new DISCOUNT::OverMinusDiscount
+		(_threshold, _threshold_VIP, _discount, _discount_VIP);
+		break;
+	default:
+		break;
+	}
+}
+
+void RESTAURANT::Restaurant::setDiscount(DiscountType _type, double _threshold, double _discount)
+{
+	switch (_type)
+	{
+	case RESTAURANT::overPercent:
+		discount = new DISCOUNT::OverPercentDiscount
+		(_threshold, _discount);
+		break;
+	case RESTAURANT::allPercent:
+		discount = new DISCOUNT::AllPercentDiscount
+		(_threshold, _discount);
+		break;
+	case RESTAURANT::overMinus:
+		discount = new DISCOUNT::OverMinusDiscount
+		(_threshold, _discount);
+		break;
+	default:
+		break;
+	}
+}
+
+DISCOUNT::Discount* RESTAURANT::Restaurant::discount = 
+	new DISCOUNT::OverPercentDiscount(0, 0);

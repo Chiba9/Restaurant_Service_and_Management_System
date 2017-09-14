@@ -1,7 +1,7 @@
 #ifndef COMMON_H
 #define COMMON_H
 
-
+#include<type_traits>
 using AccountID = unsigned;
 using CommentId = unsigned;
 using CommentListId = unsigned;
@@ -32,6 +32,9 @@ namespace COMMENT {
 
 namespace DISCOUNT {
 	class Discount;
+	class OverPercentDiscount;
+	class AllPercentDiscount;
+	class OverMinusDiscount;
 }
 
 namespace MENU {
@@ -55,5 +58,16 @@ namespace TASK {
 	class TaskList;
 }
 
+namespace RS {
+	using namespace TASK;
+	using namespace TABLE;
+	using namespace RESTAURANT;
+	using namespace ORDER;
+	using namespace MENU;
+	using namespace DISH;
+	using namespace DISCOUNT;
+	using namespace COMMENT;
+	using namespace ACCOUNT;
+}
 #include "restaurant.h"
 #endif // COMMON_H

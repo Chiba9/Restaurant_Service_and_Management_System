@@ -10,12 +10,7 @@
 #include "comment.h"
 
 namespace DISH {
-	class Dish;
-	class Menu;
-	class COMMENT::Comment;
 	std::ostream& operator<<(std::ostream&, const Dish&);
-	using DishId = unsigned;
-
 	enum Spicy { Not = 1, Little, Normal, Much, Very };
 
 	/**********菜品类 Dish*********/
@@ -24,11 +19,12 @@ namespace DISH {
 	{
 		friend void swap(Dish&, Dish&);
 	public:
-		Dish(const std::string& n, double p, const std::string& pic = "", Spicy s = Normal, CommentListId c = Nodata) :
-			ID(),name(n), price(p), picture(pic), spice(s), commentList(c)
+		Dish(const std::string& n, double p, const std::string& pic = "", Spicy s = Normal,
+			std::string _description = "", CommentListId c = Nodata,unsigned _id = Nodata):
+			ID(_id),name(n), price(p),description(_description), picture(pic), spice(s), commentList(c)
 		{
-			if (commentList == -1) {
-				COMMENT::CommentList _commentList(true);
+			if (commentList == Nodata) {
+				COMMENT::CommentList _commentList;
 				commentList = _commentList.id();
 				RESTAURANT::Restaurant::DishMap.insert({ id(),std::make_shared<Dish>(*this) });
 			}
@@ -41,7 +37,7 @@ namespace DISH {
 		unsigned CommentNumber()const;
 		const std::string& getName()const;
 		const std::string& getPicture()const;
-		const CommentListId& getCommentListId()const;
+		const COMMENT::CommentList& getCommentList()const;
 		const Spicy& getSpice()const;
 		const std::string& getDescription();
 		double getPrice()const;
@@ -50,7 +46,7 @@ namespace DISH {
 		void setDescription(const std::string&);
 		void addComment(CommentId commentId);
 		void setSpice(const Spicy&);
-		double star()const;                 //返回评星//还未实现
+		double star()const;                 //返回评星
 	private:
 		std::string picture;                //菜图
 		std::string name;                   //菜名
@@ -81,5 +77,12 @@ namespace DISH {
 		void sortByHeat(bool reverse = false);
 		unsigned size() const{ return dishVec.size(); }
 	};
+
+	template<typename... Args>
+	Dish& newDish(Args&&... args)
+	{
+		DishId _id = Dish(std::forward<Args>(args)...).id();
+		return *RESTAURANT::Restaurant::DishMap.at(_id);
+	}
 }
 #endif // !DISH_H
